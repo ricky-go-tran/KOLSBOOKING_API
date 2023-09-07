@@ -30,4 +30,9 @@
 # available at https://guides.rubyonrails.org/i18n.html.
 
 en:
-  hello: "Hello world"
+  genaral:
+    basic:
+    error:
+      image_size: "Please choose a photo smaller than %{max_size} bytes"
+      image_type: "It isn't a image"
+    success:
