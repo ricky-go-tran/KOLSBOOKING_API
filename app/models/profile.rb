@@ -1,18 +1,13 @@
 class Profile < ApplicationRecord
-  MIN_AGE = 16.years
-  IMAGE_MAX_SIZE = 10.megabytes
-  IMAGE_TYPE_SUPPORT = %w[image/png image/jpeg].freeze
-  PHONE_LENGTH = 10
-  PROFILE_FULLNAME_LENGTH = 4..20
-  PROFILE_ADDRESS_LENGTH = 5..200
-
   has_one :kol_profile
   has_one_attached :avatar
-  has_many :emojis
-  has_many :reports
+  has_many :emojis, foreign_key: 'profile_id', class_name: 'Emoji'
+  has_many :reports, foreign_key: 'profile_id', class_name: 'Report'
   has_many :jobs
-  has_many :follower, class: 'Follower', foreign_key: 'follower_id'
-  has_many :followed, class: 'Follower', foreign_key: 'followed_id'
+  has_many :follower, class_name: 'Follower', foreign_key: 'follower_id'
+  has_many :followed, class_name: 'Follower', foreign_key: 'followed_id'
+  has_many :emojied, as: :emojiable, class_name: 'Emoji'
+  has_many :reported, as: :reportable, class_name: 'Report'
 
   validates :fullname, :status, presence: true
   validates :phone, length: { is: PHONE_LENGTH, message: I18n.t('profile.error.phone_legth', phone_size: PHONE_LENGTH) }

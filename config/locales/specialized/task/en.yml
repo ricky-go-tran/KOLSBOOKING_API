@@ -1,0 +1,11 @@
+en:
+  task:
+    basic:
+      task: "task"
+      tasks: "tasks"
+    attribute:
+    error:
+      title_length: "Title's lengths from %{min_size} to %{max_size}"
+      desc_length: "Description's lengths from %{min_size} to %{max_size}"
+      start_before_end: "Must be after start time"
+    success:
