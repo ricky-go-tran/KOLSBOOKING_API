@@ -2,6 +2,7 @@
 
 class Users::SessionsController < Devise::SessionsController
   include RackSessionFix
+
   respond_to :json
 
   private
@@ -18,7 +19,7 @@ class Users::SessionsController < Devise::SessionsController
   def respond_to_on_destroy
     if request.headers['Authorization'].present?
       jwt_payload = JWT.decode(request.headers['Authorization'].split(' ').last, Rails.application.credentials.jwt_key!).first
-      current_user = User.find(jwt_payload['sub'])
+      current_user = User.find_by(jwt_payload['sub'])
     end
 
     if current_user
@@ -33,5 +34,4 @@ class Users::SessionsController < Devise::SessionsController
       }, status: :unauthorized
     end
   end
-
 end

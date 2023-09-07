@@ -1,6 +1,6 @@
 FactoryBot.define do
   factory :emoji do
-    type { "" }
+    type { '' }
     objective { nil }
     profile { nil }
   end
