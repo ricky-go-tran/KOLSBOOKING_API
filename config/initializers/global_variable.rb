@@ -1,3 +1,6 @@
+## User Contants
+EMAILS_ADMIN = %w[tdphat.study@gmail.com admin@admin.com]
+
 ## Profile Constants
 MIN_AGE = 16.years
 IMAGE_MAX_SIZE = 10.megabytes
@@ -5,6 +8,7 @@ IMAGE_TYPE_SUPPORT = %w[image/png image/jpeg]
 PHONE_LENGTH = 10
 PROFILE_FULLNAME_LENGTH = 4..20
 PROFILE_ADDRESS_LENGTH = 5..200
+
 
 ## Bookmark Contants
 BOOKMARK_STATUS = %w[care attention extremely]

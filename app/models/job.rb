@@ -1,4 +1,5 @@
 class Job < ApplicationRecord
+  resourcify
   belongs_to :profile
   has_many :bookmarks
   has_many :emojis, as: :emojiable

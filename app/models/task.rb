@@ -1,4 +1,5 @@
 class Task < ApplicationRecord
+  resourcify
   belongs_to :kol_profile
 
   validates :title, :start_time, :end_time, :status, presence: true

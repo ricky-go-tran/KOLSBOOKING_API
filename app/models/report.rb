@@ -1,4 +1,5 @@
 class Report < ApplicationRecord
+  resourcify
   belongs_to :objective
   belongs_to :profile
   belongs_to :reportable, polymorphic: true
