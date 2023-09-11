@@ -1,10 +1,11 @@
 class Job < ApplicationRecord
   belongs_to :profile
   has_many :bookmarks
+  has_many :emojis, as: :emojiable
 
   validates :title, :price, :status, presence: true
-  validates :price, numericality: { greater_than: 0, message: 'Greater than 0' }
-  validates :status, inclusion: { in: %w[post booking apply complete payment finish cancle] }
-  validates :title, length: { in: 5..200, message: 'Title\' length from 5 to 200 ' }
-  validates :description, length: { in: 10..3000, message: 'Description\' length from 10 to 3000 ' }
+  validates :price, numericality: { greater_than: JOB_PRICE_MIN, message: I18n.t('job.error.price_large_zero') }
+  validates :status, inclusion: { in: JOB_STATUS }
+  validates :title, length: { in: JOB_TITLE_LENGTH, message: I18n.t('job.error.title_length'), min_size: JOB_TITLE_LENGTH.min, max_size: JOB_TITLE_LENGTH.max }
+  validates :description, length: { in: JOB_DESC_LENGTH, message: I18n.t('job.error.desc_length'), min_size: JOB_DESC_LENGTH.min, max_size: JOB_DESC_LENGTH.max }
 end

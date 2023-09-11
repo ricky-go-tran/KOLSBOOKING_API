@@ -1,8 +1,9 @@
 class Report < ApplicationRecord
   belongs_to :objective
   belongs_to :profile
+  belongs_to :reportable, polymorphic: true
 
   validates :title, :description, presence: true
-  validates :title, length: { in: 5..200, message: 'Title\' length from 5 to 200' }
-  validates :description, length: { in: 10..3000, message: 'Description\' length from 10 to 3000' }
+  validates :title, length: { in: REPORT_TITLE_LENGTH, message: I18n.t('report.error.title_length'), min_size: REPORT_TITLE_LENGTH.min, max_size: REPORT_TITLE_LENGTH.max }
+  validates :description, length: { in: REPORT_DESC_LENGTH, message: I18n.t('report.error.desc_length'), min_size: REPORT_DESC_LENGTH.min, max_size: REPORT_DESC_LENGTH.max }
 end

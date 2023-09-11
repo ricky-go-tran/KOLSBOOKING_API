@@ -53,12 +53,13 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_06_094532) do
   end
 
   create_table "emojis", force: :cascade do |t|
-    t.string "type", null: false
-    t.bigint "objective_id", null: false
+    t.string "status", null: false
+    t.string "emojiable_type", null: false
+    t.bigint "emojiable_id", null: false
     t.bigint "profile_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["objective_id"], name: "index_emojis_on_objective_id"
+    t.index ["emojiable_type", "emojiable_id"], name: "index_emojis_on_emojiable"
     t.index ["profile_id"], name: "index_emojis_on_profile_id"
   end
 
@@ -97,13 +98,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_06_094532) do
     t.index ["profile_id"], name: "index_kol_profiles_on_profile_id"
   end
 
-  create_table "objectives", force: :cascade do |t|
-    t.string "type_object"
-    t.bigserial "object_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
   create_table "profiles", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.string "fullname", null: false
@@ -119,12 +113,13 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_06_094532) do
   create_table "reports", force: :cascade do |t|
     t.string "title", null: false
     t.text "description", null: false
-    t.bigint "objective_id", null: false
+    t.string "reportable_type", null: false
+    t.bigint "reportable_id", null: false
     t.bigint "profile_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["objective_id"], name: "index_reports_on_objective_id"
     t.index ["profile_id"], name: "index_reports_on_profile_id"
+    t.index ["reportable_type", "reportable_id"], name: "index_reports_on_reportable"
   end
 
   create_table "tasks", force: :cascade do |t|
@@ -157,14 +152,12 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_06_094532) do
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "bookmarks", "jobs"
   add_foreign_key "bookmarks", "kol_profiles"
-  add_foreign_key "emojis", "objectives"
   add_foreign_key "emojis", "profiles"
   add_foreign_key "followers", "profiles", column: "followed_id"
   add_foreign_key "followers", "profiles", column: "follower_id"
   add_foreign_key "jobs", "profiles"
   add_foreign_key "kol_profiles", "profiles"
   add_foreign_key "profiles", "users"
-  add_foreign_key "reports", "objectives"
   add_foreign_key "reports", "profiles"
   add_foreign_key "tasks", "kol_profiles"
 end

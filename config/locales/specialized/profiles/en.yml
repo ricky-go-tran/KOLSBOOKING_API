@@ -1,0 +1,13 @@
+en:
+  profile:
+    basic:
+      profile: "Profile"
+      profiles: "Profiles"
+    attribute:
+    error:
+      phone_length: "Phone's length must %{phone_size}"
+      full_name_length: "Full Name's lengths from %{min_size} to %{max_size}"
+      address_length: "Length of address from %{min_size} to %{max_size}"
+      birthday_future: "Birthday can't future"
+      old_enough: "User is not old enough"
+    success:
