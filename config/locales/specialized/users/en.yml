@@ -1,0 +1,3 @@
+en:
+  user:
+    not_enough_authorization: "Do not have enough authority to perform this action"

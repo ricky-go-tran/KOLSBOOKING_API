@@ -1,4 +1,6 @@
 class User < ApplicationRecord
+  EMAILS_ADMIN = %w[tdphat.study@gmail.com admin@admin.com].freeze
+
   rolify
   include Devise::JWT::RevocationStrategies::JTIMatcher
   # Include default devise modules. Others available are:

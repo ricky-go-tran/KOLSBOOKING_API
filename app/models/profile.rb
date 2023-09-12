@@ -1,4 +1,11 @@
 class Profile < ApplicationRecord
+  MIN_AGE = 16.years
+  IMAGE_MAX_SIZE = 10.megabytes
+  IMAGE_TYPE_SUPPORT = %w[image/png image/jpeg].freeze
+  PHONE_LENGTH = 10
+  PROFILE_FULLNAME_LENGTH = 4..20
+  PROFILE_ADDRESS_LENGTH = 5..200
+
   has_one :kol_profile
   has_one_attached :avatar
   has_many :emojis, foreign_key: 'profile_id', class_name: 'Emoji'
@@ -11,12 +18,22 @@ class Profile < ApplicationRecord
 
   validates :fullname, :status, :birthday, presence: true
   validates :phone, length: { is: PHONE_LENGTH, message: I18n.t('profile.error.phone_legth', phone_size: PHONE_LENGTH) }
-  validates :fullname, length: { in: PROFILE_FULLNAME_LENGTH, message: I18n.t('profile.error.full_name_length', min_size: PROFILE_FULLNAME_LENGTH.min, max_size: PROFILE_FULLNAME_LENGTH.max) }
-  validates :address, length: { in: PROFILE_ADDRESS_LENGTH, message: I18n.t('profile.error.address_legth', min_size: PROFILE_ADDRESS_LENGTH.min, max_size: PROFILE_ADDRESS_LENGTH.max) }
+  validates :fullname, length: {
+    in: PROFILE_FULLNAME_LENGTH,
+    message: I18n.t('profile.error.full_name_length',
+                    min_size: PROFILE_FULLNAME_LENGTH.min,
+                    max_size: PROFILE_FULLNAME_LENGTH.max)
+  }
+  validates :address, length: {
+    in: PROFILE_ADDRESS_LENGTH,
+    message: I18n.t('profile.error.address_length',
+                    min_size: PROFILE_ADDRESS_LENGTH.min,
+                    max_size: PROFILE_ADDRESS_LENGTH.max)
+  }
   validates :avatar, size: { less_than: IMAGE_MAX_SIZE, message: I18n.t('genaral.error.image_size', max_size: IMAGE_MAX_SIZE) },
                      content_type: { in: IMAGE_TYPE_SUPPORT, message: I18n.t('genaral.error.image_type') }
-  validate :check_birtday_furture
-  validate :check_age_enough
+  validate :check_birtday_furture, on: %i[create update]
+  validate :check_age_enough, on: %i[create update]
 
   private
 

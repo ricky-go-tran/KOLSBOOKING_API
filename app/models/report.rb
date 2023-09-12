@@ -1,4 +1,7 @@
 class Report < ApplicationRecord
+  REPORT_TITLE_LENGTH = 5..200
+  REPORT_DESC_LENGTH = 10..3000
+
   resourcify
   belongs_to :objective
   belongs_to :profile

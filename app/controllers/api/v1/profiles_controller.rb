@@ -1,4 +1,5 @@
 class Api::V1::ProfilesController < ApplicationController
+  before_action :check_authentication
   before_action :prepare_profile, only: %i[index update]
 
   def index
@@ -6,6 +7,7 @@ class Api::V1::ProfilesController < ApplicationController
   end
 
   def create
+    profile = Profile.new(profile_params)
     if profile.save
       render json: ProfileSerializer.new(profile), status: 201
     else
@@ -28,6 +30,6 @@ class Api::V1::ProfilesController < ApplicationController
   end
 
   def profile_params
-    params.require(:profile).permit(:fullname, :birthday, :phone, :address, :status, :avatar)
+    params.require(:profile).permit(:fullname, :birthday, :phone, :address, :status, :avatar, :user_id)
   end
 end

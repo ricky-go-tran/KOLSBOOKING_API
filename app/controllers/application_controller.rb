@@ -8,4 +8,13 @@ class ApplicationController < ActionController::API
     devise_parameter_sanitizer.permit(:sign_up, keys: %i[name avatar])
     devise_parameter_sanitizer.permit(:account_update, keys: %i[name avatar])
   end
+
+  def check_authentication
+    if current_user.blank?
+      render json: {
+        status: 401,
+        message: "Couldn't find an active session."
+      }, status: :unauthorized
+    end
+  end
 end
