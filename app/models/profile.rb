@@ -7,6 +7,7 @@ class Profile < ApplicationRecord
   PROFILE_ADDRESS_LENGTH = 5..200
   PROFILE_STATUS = %w[valid invalid lock].freeze
 
+  belongs_to :user
   has_one :kol_profile
   has_one_attached :avatar
   has_many :emojis, foreign_key: 'profile_id', class_name: 'Emoji'

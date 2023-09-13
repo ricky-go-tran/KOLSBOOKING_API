@@ -1,3 +1,6 @@
 en:
   user:
     not_enough_authorization: "Do not have enough authority to perform this action"
+    not_login: "Couldn't find an active session."
+    error_already_valid: "This user is already valid"
+    error_already_lock: "This user is already lock"

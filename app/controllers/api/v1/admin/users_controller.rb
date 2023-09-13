@@ -1,5 +1,5 @@
 class Api::V1::Admin::UsersController < Api::V1::Admin::BaseController
-  before_action :prepare_user, only: %i[update lock unlock]
+  before_action :prepare_user, only: %i[show lock unlock]
 
   def index
     users = User.all.preload(:profile)
@@ -16,9 +16,13 @@ class Api::V1::Admin::UsersController < Api::V1::Admin::BaseController
     end
   end
 
+  def show
+    render json: UserSerializer.new(@user)
+  end
+
   def unlock
-    if @user.profile.status == 'invalid'
-      render json: { errors: ['This user is already invalid'] }, status: 422
+    if @user.profile.status == 'valid'
+      render json: { errors: [I18n.t('user.error_already_valid')] }, status: 422
     elsif @user.profile.update(status: 'valid')
       render json: UserSerializer.new(@user), status: 200
     else
@@ -28,11 +32,11 @@ class Api::V1::Admin::UsersController < Api::V1::Admin::BaseController
 
   def lock
     if @user.profile.status == 'lock'
-      render json: { errors: ['This user is already locked'] }, status: 422
+      render json: { errors: [I18n.t('user.error_already_lock')] }, status: 422
     elsif @user.profile.update(status: 'lock')
       render json: UserSerializer.new(@user), status: 200
     else
-      render json: { errors: @user.errors.full_messages }, status: 42
+      render json: { errors: @user.errors.full_messages }, status: 422
     end
   end
 
@@ -43,6 +47,6 @@ class Api::V1::Admin::UsersController < Api::V1::Admin::BaseController
   end
 
   def prepare_user
-    @user = User.find_by(params[:id])
+    @user = User.find_by(id: params[:id])
   end
 end

@@ -11,4 +11,5 @@ en:
       birthday_future: "Birthday can't future"
       old_enough: "User is not old enough"
       profile_status: "Profile must be status valid"
+      profile_setup: "You need to complete your profile setup before proceeding."
     success:

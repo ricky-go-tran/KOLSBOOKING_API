@@ -1,7 +1,7 @@
 class Report < ApplicationRecord
   REPORT_TITLE_LENGTH = 5..200
   REPORT_DESC_LENGTH = 10..3000
-
+  REPORT_STATUS = %w[pending proccessing resovled rejected].freeze
   resourcify
   belongs_to :objective
   belongs_to :profile

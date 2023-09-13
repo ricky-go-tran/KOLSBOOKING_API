@@ -8,6 +8,7 @@ Rails.application.routes.draw do
             put 'unlock'
           end
         end
+        resources :jobs, only: %i[index]
       end
       resources :profiles, only: %i[index create update]
     end
