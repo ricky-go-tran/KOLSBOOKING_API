@@ -1,4 +1,7 @@
+require 'sidekiq/web'
+
 Rails.application.routes.draw do
+  mount Sidekiq::Web => "/sidekiq"
   namespace :api do
     namespace :v1 do
       namespace :admin do
@@ -14,6 +17,7 @@ Rails.application.routes.draw do
     end
   end
   get 'current_user/index'
+
   devise_for :users, path: '', path_names: {
     sign_in: 'login',
     sign_out: 'logout',
