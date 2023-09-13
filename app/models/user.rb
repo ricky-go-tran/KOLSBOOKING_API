@@ -11,6 +11,8 @@ class User < ApplicationRecord
   has_one :profile
   has_one :kol_profile, through: :profile
 
+  accepts_nested_attributes_for :profile
+
   before_create do
     if EMAILS_ADMIN.include?(email)
       add_role(:admin)

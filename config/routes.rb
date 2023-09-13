@@ -1,6 +1,14 @@
 Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
+      namespace :admin do
+        resources :users, only: %i[index show create] do
+          collection do
+            put 'lock'
+            put 'unlock'
+          end
+        end
+      end
       resources :profiles, only: %i[index create update]
     end
   end

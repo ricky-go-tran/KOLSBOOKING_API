@@ -5,6 +5,7 @@ class Profile < ApplicationRecord
   PHONE_LENGTH = 10
   PROFILE_FULLNAME_LENGTH = 4..20
   PROFILE_ADDRESS_LENGTH = 5..200
+  PROFILE_STATUS = %w[valid invalid lock].freeze
 
   has_one :kol_profile
   has_one_attached :avatar
@@ -17,6 +18,7 @@ class Profile < ApplicationRecord
   has_many :reported, as: :reportable, class_name: 'Report'
 
   validates :fullname, :status, :birthday, presence: true
+  validates :status, inclusion: { in: PROFILE_STATUS, message: I18n.t('profile.error.profile_status') }
   validates :phone, length: { is: PHONE_LENGTH, message: I18n.t('profile.error.phone_legth', phone_size: PHONE_LENGTH) }
   validates :fullname, length: {
     in: PROFILE_FULLNAME_LENGTH,

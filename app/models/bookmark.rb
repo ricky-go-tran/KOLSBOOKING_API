@@ -1,5 +1,5 @@
 class Bookmark < ApplicationRecord
-  BOOKMARK_STATUS = %w[care attention extremely]
+  BOOKMARK_STATUS = %w[care attention extremely].freeze
 
   resourcify
   belongs_to :job
