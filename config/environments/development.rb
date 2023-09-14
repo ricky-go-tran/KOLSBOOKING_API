@@ -48,7 +48,7 @@ Rails.application.configure do
     domain: 'gmail.com',
     port: 587,
     user_name: 'developer.opendevzone@gmail.com',
-    password: 'utsgfodxqcypzyez',
+    password: Rails.application.credentials.gmail_key,
     authentication: 'plain',
     enable_starttls_auto: true
   }

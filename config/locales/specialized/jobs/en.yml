@@ -8,4 +8,5 @@ en:
       price_large_zero: "Greater than 0"
       title_length: "Title's lengths from %{min_size} to %{max_size}"
       desc_length: "Description's lengths from %{min_size} to %{max_size}"
+      already_cancel: "Job is already cancle"
     success:

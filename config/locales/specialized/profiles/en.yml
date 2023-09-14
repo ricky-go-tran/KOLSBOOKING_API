@@ -10,4 +10,6 @@ en:
       address_length: "Length of address from %{min_size} to %{max_size}"
       birthday_future: "Birthday can't future"
       old_enough: "User is not old enough"
+      profile_status: "Profile must be status valid"
+      profile_setup: "You need to complete your profile setup before proceeding."
     success:

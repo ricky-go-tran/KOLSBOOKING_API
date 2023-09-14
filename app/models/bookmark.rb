@@ -1,4 +1,7 @@
 class Bookmark < ApplicationRecord
+  BOOKMARK_STATUS = %w[care attention extremely].freeze
+
+  resourcify
   belongs_to :job
   belongs_to :kol_profile
 

@@ -7,4 +7,6 @@ en:
     error:
       title_length: "Title's lengths from %{min_size} to %{max_size}"
       desc_length: "Description's lengths from %{min_size} to %{max_size}"
+      must_pending: "Report must be in pending status"
+      must_proccess: "Report must be in proccess status"
     success:

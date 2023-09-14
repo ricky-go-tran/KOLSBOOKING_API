@@ -1,4 +1,9 @@
 class Task < ApplicationRecord
+  TASK_STATUS = %w[planning progress complete cancle].freeze
+  TASK_TITLE_LENGTH = 5..200
+  TASK_DESC_LENGTH = 10..3000
+
+  resourcify
   belongs_to :kol_profile
 
   validates :title, :start_time, :end_time, :status, presence: true
