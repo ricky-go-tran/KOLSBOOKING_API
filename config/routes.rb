@@ -1,4 +1,5 @@
 require 'sidekiq/web'
+require 'sidekiq/api'
 
 Rails.application.routes.draw do
   mount Sidekiq::Web => "/sidekiq"
@@ -12,6 +13,11 @@ Rails.application.routes.draw do
           end
         end
         resources :jobs, only: %i[index]
+        resources :sidekiq_views, only: %i[] do
+          collection do
+            get 'get_job_current_moth'
+          end
+        end
       end
       resources :profiles, only: %i[index create update]
     end
