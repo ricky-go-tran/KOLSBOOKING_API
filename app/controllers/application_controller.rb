@@ -3,6 +3,7 @@ class ApplicationController < ActionController::API
 
   before_action :configure_permitted_parameters, if: :devise_controller?
   before_action :check_first_login, unless: :devise_controller?
+  rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
 
   protected
 
@@ -32,5 +33,12 @@ class ApplicationController < ActionController::API
         message: I18n.t('profile.error.profile_setup')
       }, status: 301
     end
+  end
+
+  def user_not_authorized
+    render json: {
+      status: 403,
+      message: I18n.t('user.not_authorized')
+    }, status: :forbidden
   end
 end

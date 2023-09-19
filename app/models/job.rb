@@ -15,4 +15,12 @@ class Job < ApplicationRecord
 
   validates :title, length: { in: JOB_TITLE_LENGTH, message: I18n.t('job.error.title_length'), min_size: JOB_TITLE_LENGTH.min, max_size: JOB_TITLE_LENGTH.max }
   validates :description, length: { in: JOB_DESC_LENGTH, message: I18n.t('job.error.desc_length'), min_size: JOB_DESC_LENGTH.min, max_size: JOB_DESC_LENGTH.max }
+
+  scope :total_current_month, ->(kol_id) {
+    where(created_at: Time.zone.now.beginning_of_month..Time.zone.now.end_of_month, kol_id:)
+  }
+
+  scope :status_current_month, ->(kol_id, status) {
+    where(status:, created_at: Time.zone.now.beginning_of_month..Time.zone.now.end_of_month, kol_id:)
+  }
 end

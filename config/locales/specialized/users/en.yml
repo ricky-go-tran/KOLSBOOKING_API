@@ -4,3 +4,4 @@ en:
     not_login: "Couldn't find an active session."
     error_already_valid: "This user is already valid"
     error_already_lock: "This user is already lock"
+    not_authorized: "You are not authorized to perform this action."

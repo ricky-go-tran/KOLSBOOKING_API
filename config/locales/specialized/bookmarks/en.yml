@@ -5,4 +5,7 @@ en:
       bookmarks: "bookmarks"
     attribute:
     error:
+      already: "Bookmark already exists"
+      no_exist: "Bookmark not exists"
     success:
+      deleted: "Bookmark has been deleted"

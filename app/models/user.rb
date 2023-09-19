@@ -14,10 +14,16 @@ class User < ApplicationRecord
   accepts_nested_attributes_for :profile
 
   before_create do
-    if EMAILS_ADMIN.include?(email)
-      add_role(:admin)
-    else
-      add_role(:base)
+    unless has_role?(:admin)
+      if EMAILS_ADMIN.include?(email)
+        add_role(:admin)
+      else
+        add_role(:base)
+      end
     end
+  end
+
+  def delete_roles
+    roles.delete(roles.where(id: roles.ids))
   end
 end
