@@ -3,7 +3,7 @@ require 'sidekiq/api'
 
 Rails.application.routes.draw do
   mount Sidekiq::Web => "/sidekiq"
-  namespace :api do
+  namespace :api, defaults: { format: :json } do
     namespace :v1 do
       namespace :admin do
         resources :users, only: %i[index show create] do
@@ -73,6 +73,7 @@ Rails.application.routes.draw do
     registration: 'signup'
   },
   controllers: {
+    omniauth_callbacks: 'users/omniauth_callbacks',
     sessions: 'users/sessions',
     registrations: 'users/registrations'
   }

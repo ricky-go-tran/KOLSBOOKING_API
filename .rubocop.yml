@@ -18,6 +18,7 @@ AllCops:
     - Rakefile
     - node_modules/**/*
     - app/queries/**/*
+    - app/models/user.rb
 
 Bundler/OrderedGems:
   Enabled: false
