@@ -1,5 +1,5 @@
 class JobWithEmojiSerializer < BaseSerializer
-  attributes :id, :title, :description
+  attributes :id, :title, :description, :created_at
 
   attribute :owner do |job|
     ProfileSerializer.new(job.profile).as_json

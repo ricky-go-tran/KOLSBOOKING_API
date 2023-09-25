@@ -1,7 +1,8 @@
 class Api::V1::JobsController < ApplicationController
   def index
-    @jobs = policy_scope(Job)
-    render json: JobWithEmojiSerializer.new(@jobs), status: 200
+    jobs = policy_scope(Job)
+    pagy, jobs = pagy(jobs, page: page_number, items: page_size)
+    render json: JobWithEmojiSerializer.new(jobs, { meta: pagy_metadata(pagy) }), status: 200
   end
 
   def show

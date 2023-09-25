@@ -55,6 +55,7 @@ Rails.application.routes.draw do
         end
       end
 
+      resources :kols, only: %i[index]
       resources :jobs, only: %i[index show]
       resources :profiles, only: %i[index create] do
         collection do

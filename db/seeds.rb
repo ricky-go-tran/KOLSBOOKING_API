@@ -9,5 +9,4 @@
 
     jobs.each do |job|
       job.image.attach(io: URI.open(Faker::LoremFlickr.image(size: "1200x900")), filename: 'default.jpg')
-
     end
