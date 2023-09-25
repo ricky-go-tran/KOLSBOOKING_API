@@ -3,7 +3,8 @@ class Api::V1::Admin::JobsController < Api::V1::Admin::BaseController
 
   def index
     jobs = Job.all.includes(:profile)
-    render json: JobSerializer.new(jobs), status: 200
+    pagy, jobs = pagy(jobs, page: page_number, items: page_size)
+    render json: JobSerializer.new(jobs, { meta: pagy_metadata(pagy) }), status: 200
   end
 
   def cancle

@@ -24,18 +24,14 @@ Rails.application.routes.draw do
             put 'rejected'
           end
         end
-        resources :sidekiq_views, only: %i[] do
+        resources :sidekiq_views, only: %i[index] do
           collection do
             get 'get_job_current_moth'
           end
         end
       end
       namespace :kol do
-        resources :statiscal, only: %i[] do
-          collection do
-            get 'index_month'
-          end
-        end
+        resources :statistical, only: %i[index]
         resources :tasks, only: %i[ index create  update destroy ]
         resources :kol_profiles, only: %i[index create] do
           collection do
@@ -58,6 +54,8 @@ Rails.application.routes.draw do
             end
         end
       end
+
+      resources :jobs, only: %i[index show]
       resources :profiles, only: %i[index create] do
         collection do
           put 'change'

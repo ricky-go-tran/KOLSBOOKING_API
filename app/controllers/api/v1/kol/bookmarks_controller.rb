@@ -2,8 +2,9 @@ class Api::V1::Kol::BookmarksController < Api::V1::Kol::BaseController
   before_action :prepare_bookmark, only: %i[mark unmark]
 
   def index
-    @bookmarks = policy_scope([:kol, Bookmark])
-    render json: BookmarkSerializer.new(@bookmarks), status: 200
+    bookmarks = policy_scope([:kol, Bookmark])
+    pagy, bookmarks = pagy(bookmarks, page: page_number, items: page_size)
+    render json: BookmarkSerializer.new(bookmarks, { meta: pagy_metadata(pagy) }), status: 200
   end
 
   def mark

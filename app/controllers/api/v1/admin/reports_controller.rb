@@ -1,9 +1,10 @@
 class Api::V1::Admin::ReportsController < ApplicationController
-  before_action :prepare_job, only: %i[proccess sovled rejected]
+  before_action :prepare_report, only: %i[proccess sovled rejected]
 
   def index
-    @reports = Report.preload(:profile).all
-    render json: ReportSerializer.new(@reports), status: 200
+    reports = Report.preload(:profile).all
+    pagy, reports = pagy(reports, page: page_number, items: page_size)
+    render json: ReportSerializer.new(reports, { meta: pagy_metadata(pagy) }), status: 200
   end
 
   def proccess
