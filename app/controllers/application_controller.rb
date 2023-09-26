@@ -1,5 +1,5 @@
 class ApplicationController < ActionController::API
-  include Pundit
+  include Pundit::Authorization
 
   before_action :configure_permitted_parameters, if: :devise_controller?
   before_action :check_first_login, unless: :devise_controller?
