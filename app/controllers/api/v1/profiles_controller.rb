@@ -1,6 +1,6 @@
 class Api::V1::ProfilesController < ApplicationController
   before_action :check_authentication
-  before_action :prepare_profile, only: %i[index update]
+  before_action :prepare_profile, only: %i[index change]
 
   def index
     render json: ProfileSerializer.new(@profile), status: 200
@@ -11,15 +11,15 @@ class Api::V1::ProfilesController < ApplicationController
     if profile.save
       render json: ProfileSerializer.new(profile), status: 201
     else
-      render json: profile.errors, status: 422
+      render json: profile.errors.full_messages, status: 422
     end
   end
 
-  def update
-    if @profile.update(profile_params)
+  def change
+    if @profile.update(profile_update_params)
       render json: ProfileSerializer.new(@profile), status: 200
     else
-      render json: @profile.errors, status: 422
+      render json: @profile.errors.full_messages, status: 422
     end
   end
 
@@ -30,6 +30,10 @@ class Api::V1::ProfilesController < ApplicationController
   end
 
   def profile_params
-    params.require(:profile).permit(:fullname, :birthday, :phone, :address, :status, :avatar, :user_id)
+    params.require(:profile).permit(:fullname, :birthday, :phone, :address, :avatar, :user_id)
+  end
+
+  def profile_update_params
+    params.require(:profile).permit(:fullname, :birthday, :phone, :address, :avatar)
   end
 end

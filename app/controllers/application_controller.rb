@@ -1,9 +1,19 @@
 class ApplicationController < ActionController::API
+  include Pagy::Backend
+  include Pundit
   include Pundit::Authorization
 
   before_action :configure_permitted_parameters, if: :devise_controller?
   before_action :check_first_login, unless: :devise_controller?
   rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
+
+  def page_number
+    params.dig(:page, :number) || 1
+  end
+
+  def page_size
+    params.dig(:page, :size) || Pagy::DEFAULT[:items]
+  end
 
   protected
 

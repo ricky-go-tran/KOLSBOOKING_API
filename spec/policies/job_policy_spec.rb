@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-RSpec.describe Kol::BookmarkPolicy, type: :policy do
+RSpec.describe JobPolicy, type: :policy do
   let(:user) { User.new }
 
   subject { described_class }

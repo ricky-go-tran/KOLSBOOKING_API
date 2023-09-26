@@ -3,7 +3,8 @@ class Api::V1::Admin::UsersController < Api::V1::Admin::BaseController
 
   def index
     users = User.all.preload(:profile)
-    render json: UserSerializer.new(users), status: 200
+    pagy, users = pagy(users, page: page_number, items: page_size)
+    render json: UserSerializer.new(users, { meta: pagy_metadata(pagy) }), status: 200
   end
 
   def create
@@ -35,7 +36,7 @@ class Api::V1::Admin::UsersController < Api::V1::Admin::BaseController
     if @user.profile.status == 'lock'
       render json: { errors: [I18n.t('user.error_already_lock')] }, status: 422
     elsif @user.profile.update(status: 'lock')
-      SendMailLockUserWorker.perform_sync(@user.id)
+      SendMailLockUserWorker.perform_in(30.seconds, @user.id)
       render json: UserSerializer.new(@user), status: 200
     else
       render json: { errors: @user.errors.full_messages }, status: 422
