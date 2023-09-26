@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_09_20_095050) do
+ActiveRecord::Schema[7.0].define(version: 2023_09_26_133112) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -72,6 +72,23 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_20_095050) do
     t.index ["follower_id"], name: "index_followers_on_follower_id"
   end
 
+  create_table "industries", force: :cascade do |t|
+    t.string "name"
+    t.text "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "industry_associations", force: :cascade do |t|
+    t.bigint "industry_id", null: false
+    t.string "insdustry_associationable_type", null: false
+    t.bigint "insdustry_associationable_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["industry_id"], name: "index_industry_associations_on_industry_id"
+    t.index ["insdustry_associationable_type", "insdustry_associationable_id"], name: "index_industry_associations_on_insdustry_associationable"
+  end
+
   create_table "jobs", force: :cascade do |t|
     t.bigint "profile_id", null: false
     t.bigserial "kol_id", null: false
@@ -82,6 +99,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_20_095050) do
     t.string "stripe_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.text "requirement", default: "Requirement content", null: false
     t.index ["profile_id"], name: "index_jobs_on_profile_id"
   end
 
@@ -179,6 +197,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_20_095050) do
   add_foreign_key "emojis", "profiles"
   add_foreign_key "followers", "profiles", column: "followed_id"
   add_foreign_key "followers", "profiles", column: "follower_id"
+  add_foreign_key "industry_associations", "industries"
   add_foreign_key "jobs", "profiles"
   add_foreign_key "kol_profiles", "profiles"
   add_foreign_key "profiles", "users"

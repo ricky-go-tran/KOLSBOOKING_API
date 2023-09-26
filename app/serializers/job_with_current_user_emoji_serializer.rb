@@ -1,4 +1,4 @@
-class JobWithEmojiSerializer < BaseSerializer
+class JobWithCurrentUserEmojiSerializer < BaseSerializer
   attributes :id, :title, :description, :requirement, :price, :created_at, :status
 
   attribute :owner do |job|
@@ -19,5 +19,13 @@ class JobWithEmojiSerializer < BaseSerializer
 
   attribute :unlike_num do |job|
     job.emojis.where(status: 'unlike').count
+  end
+
+  attribute :current_user_like do |job, params|
+    job.emojis.find_by(status: 'like', profile_id: params[:profile_id])
+  end
+
+  attribute :current_user_unlike do |job, params|
+    job.emojis.find_by(status: 'unlike', profile_id: params[:profile_id])
   end
 end

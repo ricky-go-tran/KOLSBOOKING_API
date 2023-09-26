@@ -55,6 +55,12 @@ Rails.application.routes.draw do
         end
       end
 
+      resources :emoji_jobs, only: %i[] do
+        member do
+          post 'like'
+          post 'unlike'
+        end
+      end
       resources :kols, only: %i[index show]
       resources :jobs, only: %i[index show]
       resources :profiles, only: %i[index create] do
