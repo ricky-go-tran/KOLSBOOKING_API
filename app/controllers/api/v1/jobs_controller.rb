@@ -14,7 +14,12 @@ class Api::V1::JobsController < ApplicationController
 
   def show
     authorize @job, policy_class: JobPolicy
-    render json: JobWithEmojiSerializer.new(@job), status: 200
+    if current_user.blank?
+      render json: JobWithEmojiSerializer.new(@job), status: 200
+    else
+      profile_id = current_user.profile.id
+      render json: JobWithCurrentUserEmojiSerializer.new(@job, { params: { profile_id: } }), status: 200
+    end
   end
 
   private

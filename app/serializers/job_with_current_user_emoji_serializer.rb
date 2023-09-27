@@ -28,4 +28,10 @@ class JobWithCurrentUserEmojiSerializer < BaseSerializer
   attribute :current_user_unlike do |job, params|
     job.emojis.find_by(status: 'unlike', profile_id: params[:profile_id])
   end
+
+  attribute :industry do |job|
+    IndustryWithoutDescriptionSerializer.new(
+      job.industry_associations.map { |association| association.industry }
+    )
+  end
 end

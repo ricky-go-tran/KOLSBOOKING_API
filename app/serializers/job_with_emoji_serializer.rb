@@ -20,4 +20,10 @@ class JobWithEmojiSerializer < BaseSerializer
   attribute :unlike_num do |job|
     job.emojis.where(status: 'unlike').count
   end
+
+  attribute :industry do |job|
+    IndustryWithoutDescriptionSerializer.new(
+      job.industry_associations.map { |association| association.industry }
+    )
+  end
 end
