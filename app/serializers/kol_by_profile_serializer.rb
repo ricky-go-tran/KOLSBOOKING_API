@@ -1,7 +1,7 @@
 class KolByProfileSerializer < BaseSerializer
   attributes :id, :fullname, :phone, :address, :status, :birthday
 
-  attrubute :email do |profile|
+  attribute :email do |profile|
     profile.user.email
   end
 
@@ -13,8 +13,12 @@ class KolByProfileSerializer < BaseSerializer
     end
   end
 
+  attribute :job_complete_num do |profile|
+    Job.where(kol_id: profile.id, status: ['complete', 'finish', 'payment']).count
+  end
+
   attribute :kol do |profile|
-    KolSerializer.new(profile)
+    KolSerializer.new(profile.kol_profile)
   end
 
   attribute :like_num do |profile|
@@ -28,12 +32,4 @@ class KolByProfileSerializer < BaseSerializer
   attribute :follow_num do |profile|
     profile.followed.count
   end
-
-  attribute :industry do |profile|
-    IndustryWithoutDescriptionSerializer.new(
-      profile.industry_associations.map { |association| association.industry }
-    )
-  end
-
-
 end

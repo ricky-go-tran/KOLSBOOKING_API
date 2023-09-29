@@ -1,4 +1,8 @@
 class Kol::JobPolicy < ApplicationPolicy
+  def show?
+    user.profile.id == record.kol_id
+  end
+
   def apply?
     user.profile.id == record.kol_id
   end

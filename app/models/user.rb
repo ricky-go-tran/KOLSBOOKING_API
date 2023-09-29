@@ -29,6 +29,7 @@ class User < ApplicationRecord
   end
 
   def self.from_omniauth_google(auth)
+
     where( uid: auth['sub']).first_or_create do |user|
       user.provider = "google_oauth2"
       user.email = auth['email']

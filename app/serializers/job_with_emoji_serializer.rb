@@ -23,7 +23,7 @@ class JobWithEmojiSerializer < BaseSerializer
 
   attribute :industry do |job|
     IndustryWithoutDescriptionSerializer.new(
-      job.industry_associations.map { |association| association.industry }
+      job.industry_associations.map(&:industry)
     )
   end
 end

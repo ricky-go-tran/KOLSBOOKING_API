@@ -51,4 +51,10 @@ class ApplicationController < ActionController::API
       message: I18n.t('user.not_authorized')
     }, status: :forbidden
   end
+
+  def check_present_record(record)
+    if record.nil?
+      render json: { errors: ['Not found item'] }, status: 404
+    end
+  end
 end

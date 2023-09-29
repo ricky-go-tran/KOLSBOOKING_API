@@ -10,10 +10,10 @@ class Users::SessionsController < Devise::SessionsController
   def respond_with(current_user, _opts = {})
     render json: {
       status: {
-        code: 200, message: 'Logged in successfully.',
+        message: 'Logged in successfully.',
         data: { user: UserSerializer.new(current_user).serializable_hash[:data][:attributes] }
       }
-    }, status: :ok
+    }, status: 200
   end
 
   def respond_to_on_destroy
@@ -24,14 +24,12 @@ class Users::SessionsController < Devise::SessionsController
 
     if current_user
       render json: {
-        status: 200,
-        message: 'Logged out successfully.'
-      }, status: :ok
+        errors: ['Logged out successfully.']
+      }, status: 200
     else
       render json: {
-        status: 401,
-        message: "Couldn't find an active session."
-      }, status: :unauthorized
+        errors: ["Couldn't find an active session."]
+      }, status: 401
     end
   end
 end
