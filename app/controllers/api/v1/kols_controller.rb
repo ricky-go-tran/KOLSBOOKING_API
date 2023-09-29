@@ -1,5 +1,5 @@
 class Api::V1::KolsController < ApplicationController
-  before_action :prepare_kol, only: %i[index]
+  before_action :prepare_kol, only: %i[show]
 
   def index
     kols = User.with_role(:kol).joins(:profile).where("profiles.status = 'valid'")
@@ -8,6 +8,7 @@ class Api::V1::KolsController < ApplicationController
   end
 
   def show
+    check_present_record(@kol)
     authorize @kol, policy_class: KolPolicy
     render json: KolByProfileSerializer.new(@kol), statu: 200
   end

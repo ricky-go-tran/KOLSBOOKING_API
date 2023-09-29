@@ -1,10 +1,15 @@
 class Api::V1::Kol::JobsController < Api::V1::Kol::BaseController
-  before_action :prepare_job, only: %i[apply finish payment complete cancle]
+  before_action :prepare_job, only: %i[show apply finish payment complete cancle]
 
   def index
     jobs = policy_scope([:kol, Job])
     pagy, jobs = pagy(jobs, page: page_number, items: page_size)
     render json: JobSerializer.new(jobs, { meta: pagy_metadata(pagy) }), status: 200
+  end
+
+  def show
+    authorize @job, policy_class: Kol::JobPolicy
+    render json: JobWithEmojiSerializer.new(@job), status: 200
   end
 
   def apply

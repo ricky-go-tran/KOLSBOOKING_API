@@ -12,12 +12,12 @@ Rails.application.routes.draw do
             put 'unlock'
           end
         end
-        resources :jobs, only: %i[index] do
+        resources :jobs, only: %i[index show] do
           member do
             put 'cancle'
           end
         end
-        resources :reports, only: %i[index] do
+        resources :reports, only: %i[index show] do
           member do
             put 'proccess'
             put 'sovled'
@@ -39,12 +39,12 @@ Rails.application.routes.draw do
           end
         end
         resources :bookmarks, only: %i[index] do
-          collection do
+          member do
             post 'mark'
             delete 'unmark'
           end
         end
-        resources :jobs, only: %i[index] do
+        resources :jobs, only: %i[index show] do
           member do
             put 'cancle'
             put 'apply'
@@ -55,6 +55,12 @@ Rails.application.routes.draw do
         end
       end
 
+      resources :emoji_jobs, only: %i[] do
+        member do
+          post 'like'
+          post 'unlike'
+        end
+      end
       resources :kols, only: %i[index show]
       resources :jobs, only: %i[index show]
       resources :profiles, only: %i[index create] do

@@ -1,4 +1,6 @@
 class Api::V1::ReportsController < ApplicationController
+  before_action :check_authentication
+
   def create
     report = Report.new(report_params)
     if report.save

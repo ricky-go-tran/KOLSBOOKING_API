@@ -1,6 +1,10 @@
 class KolByProfileSerializer < BaseSerializer
   attributes :id, :fullname, :phone, :address, :status, :birthday
 
+  attribute :email do |profile|
+    profile.user.email
+  end
+
   attribute :avatar do |profile|
     if profile.avatar.attached?
       Rails.application.routes.url_helpers.rails_blob_url(profile.avatar, only_path: true)
@@ -9,7 +13,23 @@ class KolByProfileSerializer < BaseSerializer
     end
   end
 
+  attribute :job_complete_num do |profile|
+    Job.where(kol_id: profile.id, status: ['complete', 'finish', 'payment']).count
+  end
+
   attribute :kol do |profile|
-    KolSerializer.new(profile)
+    KolSerializer.new(profile.kol_profile)
+  end
+
+  attribute :like_num do |profile|
+    profile.emojis.where(status: 'like').count
+  end
+
+  attribute :unlike_num do |profile|
+    profile.emojis.where(status: 'unlike').count
+  end
+
+  attribute :follow_num do |profile|
+    profile.followed.count
   end
 end

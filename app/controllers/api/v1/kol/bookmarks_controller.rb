@@ -10,6 +10,7 @@ class Api::V1::Kol::BookmarksController < Api::V1::Kol::BaseController
   def mark
     if @bookmark.blank?
       new_bookmark = Bookmark.new(bookmark_params)
+      new_bookmark.kol_profile_id = current_user.profile.kol_profile.id
       if new_bookmark.save
         render json: BookmarkSerializer.new(new_bookmark), status: 201
       else
@@ -43,10 +44,10 @@ class Api::V1::Kol::BookmarksController < Api::V1::Kol::BaseController
   private
 
   def bookmark_params
-    params.require(:bookmark).permit(:kol_profile_id, :job_id, :status)
+    params.require(:bookmark).permit(:job_id, :status)
   end
 
   def prepare_bookmark
-    @bookmark = Bookmark.find_by(kol_profile_id: bookmark_params[:kol_profile_id], job_id: bookmark_params[:job_id])
+    @bookmark = Bookmark.find_by(kol_profile_id: current_user.profile.kol_profile.id, job_id: params[:id])
   end
 end
