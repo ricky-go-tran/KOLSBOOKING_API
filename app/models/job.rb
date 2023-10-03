@@ -12,6 +12,7 @@ class Job < ApplicationRecord
   has_many :bookmarks
   has_many :emojis, as: :emojiable
   has_many :industry_associations, as: :insdustry_associationable
+  accepts_nested_attributes_for :industry_associations
 
   validates :title, :price, :status, presence: true
   validates :price, numericality: { greater_than: JOB_PRICE_MIN, message: I18n.t('job.error.price_large_zero') }

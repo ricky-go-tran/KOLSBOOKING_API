@@ -55,12 +55,25 @@ Rails.application.routes.draw do
         end
       end
 
+      namespace :base do
+        resources :jobs, only: %i[index create update show] do
+          member do
+            delete "cancle"
+          end
+          collection do
+            post "booking"
+          end
+        end
+      end
+
       resources :emoji_jobs, only: %i[] do
         member do
           post 'like'
           post 'unlike'
         end
       end
+      resources :industries, only: %i[index]
+      resources :reports, only: %i[create]
       resources :kols, only: %i[index show]
       resources :jobs, only: %i[index show]
       resources :profiles, only: %i[index create] do

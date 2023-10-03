@@ -2,7 +2,11 @@ class Api::V1::JobsController < ApplicationController
   before_action :prepare_job, only: %i[show]
 
   def index
-    jobs = policy_scope(Job)
+    jobs = if params[:search].blank?
+             policy_scope(Job)
+           else
+             policy_scope(Job).where("jobs.title LIKE '%#{params[:search]}%'")
+           end
     pagy, jobs = pagy(jobs, page: page_number, items: page_size)
     if current_user.blank?
       render json: JobWithEmojiSerializer.new(jobs, { meta: pagy_metadata(pagy) }), status: 200

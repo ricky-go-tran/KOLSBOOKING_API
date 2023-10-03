@@ -10,7 +10,7 @@ class Api::V1::Kol::KolProfilesController < Api::V1::Kol::BaseController
     if @kol_profile.save
       render json: KolProfileSerializer.new(@kol_profile), status: 201
     else
-      render json: @kol_profile.errors, status: 422
+      render json: @kol_profile.errors.full_messages, status: 422
     end
   end
 
@@ -19,7 +19,7 @@ class Api::V1::Kol::KolProfilesController < Api::V1::Kol::BaseController
     if @kol_profile.update(kol_profile_params)
       render json: KolProfileSerializer.new(@kol_profile), status: 200
     else
-      render json: @kol_profile.errors, status: 422
+      render json: @kol_profile.errors.full_messages, status: 422
     end
   end
 
