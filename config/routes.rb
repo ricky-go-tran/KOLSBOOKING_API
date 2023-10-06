@@ -3,7 +3,9 @@ require 'sidekiq/api'
 
 Rails.application.routes.draw do
   mount Sidekiq::Web => "/sidekiq"
+  mount ActionCable.server, at: "/cable"
   namespace :api, defaults: { format: :json } do
+
     namespace :v1 do
       namespace :admin do
         resources :users, only: %i[index show create] do
@@ -56,7 +58,7 @@ Rails.application.routes.draw do
       end
 
       namespace :base do
-        resources :jobs, only: %i[index create update show] do
+        resources :jobs, only: %i[index create update show edit] do
           member do
             delete "cancle"
           end
@@ -64,15 +66,38 @@ Rails.application.routes.draw do
             post "booking"
           end
         end
+
+        resources :followers, only: %i[index] do
+          member do
+            delete "unfollow"
+          end
+          collection do
+            post "follow"
+          end
+        end
       end
 
-      resources :emoji_jobs, only: %i[] do
+      resources :notifications, only: %i[index create] do
+        member do
+          post 'read'
+        end
+      end
+      resources :emoji_jobs, only: %i[index destroy] do
         member do
           post 'like'
           post 'unlike'
         end
       end
+
+      resources :emoji_profiles, only: %i[index destroy] do
+        member do
+          post 'like'
+          post 'unlike'
+        end
+      end
+
       resources :industries, only: %i[index]
+
       resources :reports, only: %i[create]
       resources :kols, only: %i[index show]
       resources :jobs, only: %i[index show]

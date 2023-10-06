@@ -2,7 +2,11 @@ class Api::V1::Admin::ReportsController < ApplicationController
   before_action :prepare_report, only: %i[proccess sovled rejected show]
 
   def index
-    reports = Report.preload(:profile).all
+    reports = if params[:tab].blank? || params[:tab] == 'all'
+                Report.all.includes(:profile).order(created_at: :desc)
+              else
+                Report.includes(:profile).where(status: params[:tab]).order(created_at: :desc)
+              end
     pagy, reports = pagy(reports, page: page_number, items: page_size)
     render json: ReportSerializer.new(reports, { meta: pagy_metadata(pagy) }), status: 200
   end

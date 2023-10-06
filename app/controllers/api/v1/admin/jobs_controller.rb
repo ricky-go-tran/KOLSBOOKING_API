@@ -2,7 +2,11 @@ class Api::V1::Admin::JobsController < Api::V1::Admin::BaseController
   before_action :prepare_job, only: %i[show cancle]
 
   def index
-    jobs = Job.all.includes(:profile)
+    jobs = if params[:tab].blank? || params[:tab] == 'all'
+             Job.all.includes(:profile).order(created_at: :desc)
+           else
+             Job.includes(:profile).where(status: params[:tab]).order(created_at: :desc)
+           end
     pagy, jobs = pagy(jobs, page: page_number, items: page_size)
     render json: JobSerializer.new(jobs, { meta: pagy_metadata(pagy) }), status: 200
   end

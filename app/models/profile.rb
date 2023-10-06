@@ -15,6 +15,8 @@ class Profile < ApplicationRecord
   has_many :jobs
   has_many :follower, class_name: 'Follower', foreign_key: 'follower_id'
   has_many :followed, class_name: 'Follower', foreign_key: 'followed_id'
+  has_many :sender, class_name: 'Notification', foreign_key: 'sender_id'
+  has_many :receiver, class_name: 'Notification', foreign_key: 'receiver_id'
   has_many :emojied, as: :emojiable, class_name: 'Emoji'
   has_many :reported, as: :reportable, class_name: 'Report'
 

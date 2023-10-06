@@ -1,13 +1,12 @@
 class Api::V1::Base::JobsController < Api::V1::Base::BaseController
-  before_action :prepare_job, only: %i[update cancle show]
+  before_action :prepare_job, only: %i[update cancle show edit]
 
   def index
-    jobs = if params[:tab].blank?
-             policy_scope([:base, Job])
+    jobs = if params[:tab].blank? || params[:tab] == 'all'
+             policy_scope([:base, Job]).order(created_at: :desc)
            else
-             policy_scope([:base, Job]).where(status: params[:tab])
+             policy_scope([:base, Job]).where_get_by_status(params[:tab]).order(created_at: :desc)
            end
-
     pagy, jobs = pagy(jobs, page: page_number, items: page_size)
     render json: JobSerializer.new(jobs, { meta: pagy_metadata(pagy) }), status: 200
   end
@@ -31,9 +30,11 @@ class Api::V1::Base::JobsController < Api::V1::Base::BaseController
   end
 
   def booking
+    industry_associations_json = params[:job][:industry_associations_attributes]
+    industry_associations = JSON.parse(industry_associations_json)
+    params[:job][:industry_associations_attributes] = industry_associations
     job = Job.new(job_booking_params)
     job.status = 'booking'
-    # TODO: realtime message for kol
     if job.save
       render json: JobSerializer.new(job), status: 201
     else
@@ -41,11 +42,19 @@ class Api::V1::Base::JobsController < Api::V1::Base::BaseController
     end
   end
 
+  def edit
+    authorize @job, policy_class: Base::JobPolicy
+    render json: JobWithIndustryAssociationSerializer.new(@job), status: 200
+  end
+
   def update
-    authorize @job, policy_class: Base::Policy
+    authorize @job, policy_class: Base::JobPolicy
+    industry_associations_json = params[:job][:industry_associations_attributes]
+    industry_associations = JSON.parse(industry_associations_json)
+    params[:job][:industry_associations_attributes] = industry_associations
     if @job.status == 'post'
       if @job.update(job_params)
-        render json: JobSerializer.new(job), status: 200
+        render json: JobSerializer.new(@job), status: 200
       else
         render json: { errors: @job.errors.full_messages }, status: 422
       end
@@ -78,6 +87,6 @@ class Api::V1::Base::JobsController < Api::V1::Base::BaseController
   end
 
   def job_booking_params
-    params.require(:job).permit(:title, :description, :profile_id, :price, :image, :kol_id, :requirement, industry_associations_attributes: [:id, :industry_id, :_destroy])
+    params.require(:job).permit!
   end
 end

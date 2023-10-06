@@ -7,6 +7,10 @@ class Base::JobPolicy < ApplicationPolicy
     user.profile.id == record.profile_id
   end
 
+  def edit?
+    user.profile.id == record.profile_id
+  end
+
   def show?
     user.profile.id == record.profile_id
   end

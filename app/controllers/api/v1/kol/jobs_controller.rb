@@ -2,7 +2,11 @@ class Api::V1::Kol::JobsController < Api::V1::Kol::BaseController
   before_action :prepare_job, only: %i[show apply finish payment complete cancle]
 
   def index
-    jobs = policy_scope([:kol, Job])
+    jobs = if params[:tab].blank? || params[:tab] == 'all'
+             policy_scope([:kol, Job]).order(created_at: :desc)
+           else
+             policy_scope([:kol, Job]).where_get_by_status(params[:tab]).order(created_at: :desc)
+           end
     pagy, jobs = pagy(jobs, page: page_number, items: page_size)
     render json: JobSerializer.new(jobs, { meta: pagy_metadata(pagy) }), status: 200
   end

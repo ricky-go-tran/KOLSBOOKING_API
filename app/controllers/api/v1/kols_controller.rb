@@ -14,7 +14,15 @@ class Api::V1::KolsController < ApplicationController
   def show
     check_present_record(@kol)
     authorize @kol, policy_class: KolPolicy
-    render json: KolByProfileSerializer.new(@kol), statu: 200
+    if current_user.blank?
+      render json: KolByProfileDetailSerializer.new(@kol), status: 200
+    elsif current_user.has_role?(:base)
+      profile_id = current_user.profile.id
+      render json: KolByProfileDetailWithCurrentEmojiAndFollowSerializer.new(@kol, { params: { profile_id: } }), status: 200
+    else
+      profile_id = current_user.profile.id
+      render json: KolByProfileDetailWithCurrentUserEmojiSerializer.new(@kol, { params: { profile_id: } }), status: 200
+    end
   end
 
   private

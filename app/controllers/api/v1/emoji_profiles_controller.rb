@@ -1,8 +1,7 @@
-class Api::V1::EmojiJobsController < ApplicationController
+class Api::V1::EmojiProfilesController < ApplicationController
   before_action :check_authentication
-
   def index
-    emojis = Emoji.where(profile_id: current_user.profile.id, emojiable_type: 'Job').order(created_at: :desc)
+    emojis = Emoji.where(profile_id: current_user.profile.id, emojiable_type: 'Profile').order(created_at: :desc)
     pagy, emojis = pagy(emojis, page: page_number, items: page_size)
     render json: EmojiWithObjectSerializer.new(emojis, { meta: pagy_metadata(pagy) }), status: 200
   end
@@ -13,7 +12,7 @@ class Api::V1::EmojiJobsController < ApplicationController
       new_emoji = Emoji.new
       new_emoji.profile_id = current_user.profile.id
       new_emoji.status = 'like'
-      new_emoji.emojiable_type = 'Job'
+      new_emoji.emojiable_type = 'Profile'
       new_emoji.emojiable_id = params[:id]
       if new_emoji.save
         render json: { message: 'Like is success' }, status: 201
@@ -37,7 +36,7 @@ class Api::V1::EmojiJobsController < ApplicationController
       new_emoji = Emoji.new
       new_emoji.profile_id = current_user.profile.id
       new_emoji.status = 'unlike'
-      new_emoji.emojiable_type = 'Job'
+      new_emoji.emojiable_type = 'Profile'
       new_emoji.emojiable_id = params[:id]
       if new_emoji.save
         render json: { message: 'Unlike is success' }, status: 201
@@ -67,6 +66,6 @@ class Api::V1::EmojiJobsController < ApplicationController
   private
 
   def prepare_emoji
-    Emoji.find_by(emojiable_type: 'Job', emojiable_id: params[:id], profile_id: current_user.profile.id)
+    Emoji.find_by(emojiable_type: 'Profile', emojiable_id: params[:id], profile_id: current_user.profile.id)
   end
 end
