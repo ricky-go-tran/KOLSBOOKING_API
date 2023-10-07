@@ -38,6 +38,11 @@ class Job < ApplicationRecord
       .count
   }
 
+  scope :job_by_industry, ->(industries) {
+    joins("INNER JOIN industry_associations ON insdustry_associationable_id = jobs.id AND insdustry_associationable_type = 'Job'")
+      .where('industry_associations.industry_id IN (?)', "#{industries.join(', ')}")
+  }
+
   scope :where_get_by_status, ->(status) {
     if status == 'post'
       where(status: ['post', 'booking'])

@@ -1,6 +1,6 @@
 class Api::V1::Kol::KolProfilesController < Api::V1::Kol::BaseController
   def index
-    render json: KolProfileSerializer.new(current_user.profile.kol_profile), status: 200
+    render json: KolByProfileDetailSerializer.new(current_user.profile), status: 200
   end
 
   def create
@@ -26,6 +26,6 @@ class Api::V1::Kol::KolProfilesController < Api::V1::Kol::BaseController
   private
 
   def kol_profile_params
-    params.require(:kol_profile).permit(:tiktok_path, :youtube_path, :facebook_path, :instagram_path)
+    params.require(:kol_profile).permit(:tiktok_path, :youtube_path, :facebook_path, :instagram_path, :about_me)
   end
 end

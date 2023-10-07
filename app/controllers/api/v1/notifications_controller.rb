@@ -1,5 +1,6 @@
 class Api::V1::NotificationsController < ApplicationController
   before_action :check_authentication
+  before_action :prepare_notification, only: %i[read]
 
   def index
     notifications = policy_scope(Notification).order(created_at: :desc)
@@ -9,8 +10,8 @@ class Api::V1::NotificationsController < ApplicationController
   def create
     notification = Notification.new(notification_param)
     if notification.save
-      NotificationsChannel.broadcast_to("notifications_#{notification.receiver_id}", NotificationSerializer.new(notification))
-      render json: NotificationSerializer.new(notification), status: 201
+      NotificationsChannel.broadcast_to("notifications_#{notification_param[:receiver_id]}", 'Sending..')
+      render json: { message: 'Successfully marked' }, status: 201
         .else
       render json: { errors: notification.errors.full_messages }, status: 422
     end
@@ -19,8 +20,8 @@ class Api::V1::NotificationsController < ApplicationController
   def read
     @notification.is_read = true
     if @notification.save
-      render json: NotificationSerializer.new(notification), status: 200
-        .else
+      render json: NotificationSerializer.new(@notification), status: 200
+    else
       render json: { errors: notification.errors.full_messages }, status: 422
     end
   end

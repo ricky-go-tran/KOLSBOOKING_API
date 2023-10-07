@@ -2,11 +2,15 @@ class Api::V1::Kol::JobsController < Api::V1::Kol::BaseController
   before_action :prepare_job, only: %i[show apply finish payment complete cancle]
 
   def index
-    jobs = if params[:tab].blank? || params[:tab] == 'all'
-             policy_scope([:kol, Job]).order(created_at: :desc)
-           else
-             policy_scope([:kol, Job]).where_get_by_status(params[:tab]).order(created_at: :desc)
-           end
+    search = params[:search]
+    tab = params[:tab]
+    jobs = policy_scope([:kol, Job]).order(created_at: :desc)
+    if search.present?
+      jobs = jobs.where('title LIKE ?', "%#{search}%")
+    end
+    if tab.present? && tab != 'all'
+      jobs = jobs.where_get_by_status(tab).order(created_at: :desc)
+    end
     pagy, jobs = pagy(jobs, page: page_number, items: page_size)
     render json: JobSerializer.new(jobs, { meta: pagy_metadata(pagy) }), status: 200
   end
@@ -17,9 +21,8 @@ class Api::V1::Kol::JobsController < Api::V1::Kol::BaseController
   end
 
   def apply
-    authorize @job, policy_class: Kol::JobPolicy
     if @job.status == 'booking' || @job.status == 'post'
-      if @job.update(status: 'apply')
+      if @job.update(status: 'apply', kol_id: current_user.profile.id)
         render json: JobSerializer.new(@job), status: 200
       else
         render json: { errors: @job.errors.full_messages }, status: 422

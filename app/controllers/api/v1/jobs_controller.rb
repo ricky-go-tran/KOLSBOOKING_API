@@ -2,11 +2,16 @@ class Api::V1::JobsController < ApplicationController
   before_action :prepare_job, only: %i[show]
 
   def index
-    jobs = if params[:search].blank?
-             policy_scope(Job)
-           else
-             policy_scope(Job).where("jobs.title LIKE '%#{params[:search]}%'")
-           end
+    search = params[:search]
+    filter = params[:filter]
+    jobs = policy_scope(Job)
+    if search.present?
+      jobs = jobs.where('title LIKE ?', "%#{search}%")
+    end
+    if filter.present?
+      jobs = jobs.job_by_industry(filter)
+    end
+
     pagy, jobs = pagy(jobs, page: page_number, items: page_size)
     if current_user.blank?
       render json: JobWithEmojiSerializer.new(jobs, { meta: pagy_metadata(pagy) }), status: 200
@@ -27,7 +32,7 @@ class Api::V1::JobsController < ApplicationController
     elsif current_user.has_role?(:kol)
       profile = current_user.profile
       kol_profile_id = profile.kol_profile.id
-      render json: JobWithCurrentUserEmojiSerializer.new(@job, { params: { profile_id: profile.id, kol_id: kol_profile_id } }), status: 200
+      render json: JobWithCurrentUserEmojiAndBookmarkSerializer.new(@job, { params: { profile_id: profile.id, kol_id: kol_profile_id } }), status: 200
     else
       profile_id = current_user.profile.id
       render json: JobWithCurrentUserEmojiSerializer.new(@job, { params: { profile_id: } }), status: 200
