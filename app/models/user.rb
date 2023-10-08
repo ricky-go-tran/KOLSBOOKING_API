@@ -24,6 +24,59 @@ class User < ApplicationRecord
     end
   end
 
+  scope :within_current_month_base, -> {
+    subquery = joins(:roles)
+    .where(roles: { name: 'base' })
+    .where(users: { created_at: Date.current.beginning_of_month..Date.current.end_of_month })
+    .group('DATE(users.created_at)')
+    .order('DATE(users.created_at)')
+    .select("DATE(users.created_at) AS date, COUNT(*) AS count")
+
+  from(subquery, :users)
+
+  }
+
+  scope :within_current_year_base, -> {
+    joins(:roles).select("DATE_TRUNC('month', users.created_at) AS month, COUNT(*) AS count")
+      .where(roles: {name: 'base'}).where(created_at: Date.current.beginning_of_year..Date.current.end_of_year)
+      .group("DATE_TRUNC('month', users.created_at)")
+      .order('month')
+  }
+
+  scope :within_six_months_base, -> {
+    joins(:roles).select("DATE_TRUNC('month', users.created_at) AS month, COUNT(*) AS count")
+      .where(roles: {name: 'base'}).where(created_at: 6.months.ago.beginning_of_month..Date.current.end_of_month)
+      .group("DATE_TRUNC('month', users.created_at)")
+      .order('month')
+  }
+
+  scope :within_current_month_kol, -> {
+    subquery = joins(:roles)
+    .where(roles: { name: 'kol' })
+    .where(users: { created_at: Date.current.beginning_of_month..Date.current.end_of_month })
+    .group('DATE(users.created_at)')
+    .order('DATE(users.created_at)')
+    .select("DATE(users.created_at) AS date, COUNT(*) AS count")
+
+  from(subquery, :users)
+  }
+
+  scope :within_current_year_kol, -> {
+    joins(:roles).select("DATE_TRUNC('month', users.created_at) AS month, COUNT(*) AS count")
+      .where(roles: {name: 'kol'}).where(created_at: Date.current.beginning_of_year..Date.current.end_of_year)
+      .group("DATE_TRUNC('month', users.created_at)")
+      .order('month')
+  }
+
+  scope :within_six_months_kol, -> {
+    joins(:roles).select("DATE_TRUNC('month', users.created_at) AS month, COUNT(*) AS count")
+      .where(roles: {name: 'kol'}).where(created_at: 6.months.ago.beginning_of_month..Date.current.end_of_month)
+      .group("DATE_TRUNC('month', users.created_at)")
+      .order('month')
+  }
+
+
+
   def delete_roles
     roles.delete(roles.where(id: roles.ids))
   end

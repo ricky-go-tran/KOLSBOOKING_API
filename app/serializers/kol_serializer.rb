@@ -1,6 +1,4 @@
-class KolSerializer < BaseSerializer
-  attributes :id, :tiktok_path, :youtube_path, :facebook_path, :instagram_path, :about_me
-
+class KolSerializer < BaseKolSerializer
   attribute :industry do |kol|
     IndustryWithoutDescriptionSerializer.new(
       kol.industry_associations.includes(:industry).map(&:industry)

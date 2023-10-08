@@ -31,12 +31,15 @@ Rails.application.routes.draw do
             get 'get_job_current_moth'
           end
         end
+        resources :dashboard, only: %i[index]
       end
+
       namespace :kol do
         resources :statistical, only: %i[index]
         resources :tasks, only: %i[ index create  update destroy ]
-        resources :kol_profiles, only: %i[index create] do
+        resources :kol_profiles, only: %i[index create edit] do
           collection do
+            put 'edit_kol_profile'
             put 'change'
           end
         end
