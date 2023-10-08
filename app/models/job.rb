@@ -12,6 +12,7 @@ class Job < ApplicationRecord
   has_many :bookmarks
   has_many :emojis, as: :emojiable
   has_many :industry_associations, as: :insdustry_associationable
+  accepts_nested_attributes_for :industry_associations, allow_destroy: true
 
   validates :title, :price, :status, presence: true
   validates :price, numericality: { greater_than: JOB_PRICE_MIN, message: I18n.t('job.error.price_large_zero') }
@@ -35,5 +36,20 @@ class Job < ApplicationRecord
       .group('DATE(created_at)')
       .order('DATE(created_at)')
       .count
+  }
+
+  scope :job_by_industry, ->(industries) {
+    joins("INNER JOIN industry_associations ON insdustry_associationable_id = jobs.id AND insdustry_associationable_type = 'Job'")
+      .where('industry_associations.industry_id IN (?)', "#{industries.join(', ')}")
+  }
+
+  scope :where_get_by_status, ->(status) {
+    if status == 'post'
+      where(status: ['post', 'booking'])
+    elsif status == 'complete'
+      where(status: ['complete', 'payment'])
+    else
+      where(status:)
+    end
   }
 end

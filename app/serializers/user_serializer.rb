@@ -4,6 +4,7 @@ class UserSerializer < BaseSerializer
   attribute :profile do |user|
     ProfileSerializer.new(user.profile)
   end
+
   attribute :role do |user|
     if user.has_role?(:admin)
       'admin'

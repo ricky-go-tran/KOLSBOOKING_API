@@ -3,7 +3,7 @@ class KolSerializer < BaseSerializer
 
   attribute :industry do |kol|
     IndustryWithoutDescriptionSerializer.new(
-      kol.industry_associations.map(&:industry)
+      kol.industry_associations.includes(:industry).map(&:industry)
     )
   end
 end

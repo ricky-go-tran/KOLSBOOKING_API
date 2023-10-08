@@ -5,7 +5,7 @@ class JobPolicy < ApplicationPolicy
 
   class Scope < Scope
     def resolve
-      scope.where(status: 'post')
+      scope.includes(:industry_associations, :emojis, :profile).where(status: 'post')
     end
   end
 end

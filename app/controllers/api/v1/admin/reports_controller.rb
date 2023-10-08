@@ -2,7 +2,15 @@ class Api::V1::Admin::ReportsController < ApplicationController
   before_action :prepare_report, only: %i[proccess sovled rejected show]
 
   def index
-    reports = Report.preload(:profile).all
+    search = params[:search]
+    tab = params[:tab]
+    reports = Report.all.includes(:profile).order(created_at: :desc)
+    if search.present?
+      reports = reports.where('title LIKE ?', "%#{search}%")
+    end
+    if tab.present? && tab != 'all'
+      reports = reports.where(status: params[:tab]).order(created_at: :desc)
+    end
     pagy, reports = pagy(reports, page: page_number, items: page_size)
     render json: ReportSerializer.new(reports, { meta: pagy_metadata(pagy) }), status: 200
   end

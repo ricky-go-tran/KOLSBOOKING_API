@@ -1,6 +1,6 @@
 class Api::V1::Kol::KolProfilesController < Api::V1::Kol::BaseController
   def index
-    render json: KolProfileSerializer.new(current_user.profile.kol_profile), status: 200
+    render json: KolByProfileDetailSerializer.new(current_user.profile), status: 200
   end
 
   def create
@@ -10,7 +10,7 @@ class Api::V1::Kol::KolProfilesController < Api::V1::Kol::BaseController
     if @kol_profile.save
       render json: KolProfileSerializer.new(@kol_profile), status: 201
     else
-      render json: @kol_profile.errors, status: 422
+      render json: @kol_profile.errors.full_messages, status: 422
     end
   end
 
@@ -19,13 +19,13 @@ class Api::V1::Kol::KolProfilesController < Api::V1::Kol::BaseController
     if @kol_profile.update(kol_profile_params)
       render json: KolProfileSerializer.new(@kol_profile), status: 200
     else
-      render json: @kol_profile.errors, status: 422
+      render json: @kol_profile.errors.full_messages, status: 422
     end
   end
 
   private
 
   def kol_profile_params
-    params.require(:kol_profile).permit(:tiktok_path, :youtube_path, :facebook_path, :instagram_path)
+    params.require(:kol_profile).permit(:tiktok_path, :youtube_path, :facebook_path, :instagram_path, :about_me)
   end
 end

@@ -1,6 +1,5 @@
 class ApplicationController < ActionController::API
   include Pagy::Backend
-  include Pundit
   include Pundit::Authorization
 
   before_action :configure_permitted_parameters, if: :devise_controller?
@@ -55,6 +54,7 @@ class ApplicationController < ActionController::API
   def check_present_record(record)
     if record.nil?
       render json: { errors: ['Not found item'] }, status: 404
+      false
     end
   end
 end

@@ -13,10 +13,6 @@ class KolByProfileSerializer < BaseSerializer
     end
   end
 
-  attribute :job_complete_num do |profile|
-    Job.where(kol_id: profile.id, status: ['complete', 'finish', 'payment']).count
-  end
-
   attribute :kol do |profile|
     KolSerializer.new(profile.kol_profile)
   end

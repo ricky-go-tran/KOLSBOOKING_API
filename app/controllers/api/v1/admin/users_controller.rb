@@ -2,7 +2,11 @@ class Api::V1::Admin::UsersController < Api::V1::Admin::BaseController
   before_action :prepare_user, only: %i[show lock unlock]
 
   def index
-    users = User.all.preload(:profile)
+    users = if params[:tab].blank? || params[:tab] == 'all'
+              User.all.includes(:profile).order(created_at: :desc)
+            else
+              User.joins(:profile).where("profiles.status = '#{params[:tab]}'").order(created_at: :desc)
+            end
     pagy, users = pagy(users, page: page_number, items: page_size)
     render json: UserSerializer.new(users, { meta: pagy_metadata(pagy) }), status: 200
   end

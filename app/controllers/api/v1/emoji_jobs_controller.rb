@@ -1,6 +1,12 @@
 class Api::V1::EmojiJobsController < ApplicationController
   before_action :check_authentication
 
+  def index
+    emojis = Emoji.where(profile_id: current_user.profile.id, emojiable_type: 'Job').order(created_at: :desc)
+    pagy, emojis = pagy(emojis, page: page_number, items: page_size)
+    render json: EmojiWithObjectSerializer.new(emojis, { meta: pagy_metadata(pagy) }), status: 200
+  end
+
   def like
     @emoji = prepare_emoji
     if @emoji.blank?
@@ -46,6 +52,15 @@ class Api::V1::EmojiJobsController < ApplicationController
       end
     else
       render json: { message: 'You already like this emoji' }, status: 204
+    end
+  end
+
+  def destroy
+    @emoji = prepare_emoji
+    if @emoji.destroy
+      render json: { message: 'Delete this emoji' }, status: 200
+    else
+      render json: { errors: @emoji.errors.full_messages }, status: 422
     end
   end
 
