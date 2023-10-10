@@ -23,6 +23,27 @@ class Job < ApplicationRecord
   validates :image, size: { less_than: IMAGE_MAX_SIZE, message: I18n.t('genaral.error.image_size', max_size: IMAGE_MAX_SIZE) },
                     content_type: { in: IMAGE_TYPE_SUPPORT, message: I18n.t('genaral.error.image_type') }
 
+  scope :within_current_month_details, -> {
+    where(created_at: Date.current.beginning_of_month..Date.current.end_of_month)
+      .group('DATE(created_at)')
+      .order('DATE(created_at)')
+      .count
+  }
+
+  scope :within_current_year_details, -> {
+    select("DATE_TRUNC('month', created_at) AS month, COUNT(*) AS count")
+      .where(created_at: Date.current.beginning_of_year..Date.current.end_of_year)
+      .group("DATE_TRUNC('month', created_at)")
+      .order('month')
+  }
+
+  scope :within_six_months_details, -> {
+    select("DATE_TRUNC('month', created_at) AS month, COUNT(*) AS count")
+      .where(created_at: 6.months.ago.beginning_of_month..Date.current.end_of_month)
+      .group("DATE_TRUNC('month', created_at)")
+      .order('month')
+  }
+
   scope :total_current_month, ->(kol_id) {
     where(created_at: Time.zone.now.beginning_of_month..Time.zone.now.end_of_month, kol_id:)
   }

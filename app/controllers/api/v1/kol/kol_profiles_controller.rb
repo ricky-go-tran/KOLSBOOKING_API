@@ -6,12 +6,17 @@ class Api::V1::Kol::KolProfilesController < Api::V1::Kol::BaseController
   def create
     @kol_profile = KolProfile.new(kol_profile_params)
     current_user.delete_roles
-    current_user.add_role(:kol_profile)
+    current_user.add_role(:kol)
     if @kol_profile.save
       render json: KolProfileSerializer.new(@kol_profile), status: 201
     else
       render json: @kol_profile.errors.full_messages, status: 422
     end
+  end
+
+  def edit_kol_profile
+    @kol_profile = current_user.profile.kol_profile
+    render json: KolWithIndustryAssociationSerializer.new(@kol_profile), status: 200
   end
 
   def change
@@ -26,6 +31,6 @@ class Api::V1::Kol::KolProfilesController < Api::V1::Kol::BaseController
   private
 
   def kol_profile_params
-    params.require(:kol_profile).permit(:tiktok_path, :youtube_path, :facebook_path, :instagram_path, :about_me)
+    params.require(:kol_profile).permit(:tiktok_path, :youtube_path, :facebook_path, :instagram_path, :about_me, industry_associations_attributes: [:id, :industry_id, :_destroy])
   end
 end
