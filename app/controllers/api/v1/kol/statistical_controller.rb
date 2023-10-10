@@ -1,32 +1,25 @@
 class Api::V1::Kol::StatisticalController < Api::V1::Kol::BaseController
   def index
+    tab = params[:tab]
+    data_hash = {}
     kol_current_id = current_user.profile.id
-    total_job = Job.total_current_month(kol_id: kol_current_id)
-    finish_job = Job.status_current_month({ kol_id: kol_current_id, status: 'finish' })
-    cancle_job = Job.status_current_month({ kol_id: kol_current_id, status: 'cancle' })
-    finish_job_detail = Job.status_current_month_details({ kol_id: kol_current_id, status: 'finish' })
-    cancel_job_detail = Job.status_current_month_details({ kol_id: kol_current_id, status: 'cancle' })
-    profit = CalculatorPriceJobService.call(finish_job)
+    data = StatisticalKolByTimeService.call(tab, kol_current_id)
+    data_hash[:total_job] = generate_date(data[:days])
+    data_hash[:cancle_job] = generate_date(data[:days])
+    data_hash[:finish_job] = generate_date(data[:days])
 
-    @days_current_month = (Date.today.beginning_of_month..Date.today.end_of_month).to_a
-
-    finish_job_detail_hash = Hash[@days_current_month.map { |day| [day.to_s, 0] }]
-    finish_job_detail.each do |date, count|
-      finish_job_detail_hash[date.to_s] = count
-    end
-    cancel_job_detail_hash = Hash[@days_current_month.map { |day| [day.to_s, 0] }]
-    cancel_job_detail.each do |date, count|
-      cancel_job_detail_hash[date.to_s] = count
-    end
-
+    data_hash = FetchStatisticalKolService.call(data, data_hash, tab)
     render json: {
-      label: finish_job_detail_hash.keys,
-      total_job: total_job.count,
-      finish_job: finish_job.count,
-      finish_detail: finish_job_detail_hash.values,
-      cancle_job: cancle_job.count,
-      cancle_detail: cancel_job_detail_hash.values,
-      profit:
-    }
+      label: data_hash[:total_job].keys,
+      total_job: data_hash[:total_job].values,
+      cancle_job: data_hash[:cancle_job].values,
+      finish_job: data_hash[:finish_job].values
+    }, status: 200
+  end
+
+  private
+
+  def generate_date(days)
+    Hash[days.map { |day| [day.to_s, 0] }]
   end
 end

@@ -27,5 +27,6 @@ module Kolbooking
     config.middleware.use ActionDispatch::Session::CookieStore, config.session_options
     config.api_only = true
     config.active_job.queue_adapter = :sidekiq
+    config.time_zone = "Asia/Bangkok"
   end
 end

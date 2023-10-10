@@ -1,5 +1,5 @@
 class JobSerializer < BaseSerializer
-  attributes :id, :title, :description, :requirement, :price, :status, :created_at
+  attributes :id, :title, :description, :requirement, :price, :status, :created_at, :stripe_id
 
   attribute :owner do |job|
     ProfileSerializer.new(job.profile).as_json
