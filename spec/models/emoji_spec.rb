@@ -1,5 +1,14 @@
 require 'rails_helper'
 
 RSpec.describe Emoji, type: :model do
-  pending "add some examples to (or delete) #{__FILE__}"
+  describe 'validation' do
+    it { should validate_presence_of(:status) }
+  end
+  describe 'association' do
+    it { should belong_to(:profile) }
+
+    it 'is polymorphic' do
+      expect(Emoji.reflect_on_association(:emojiable).options[:polymorphic]).to be true
+    end
+  end
 end

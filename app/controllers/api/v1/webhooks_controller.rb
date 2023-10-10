@@ -9,11 +9,9 @@ class Api::V1::WebhooksController < ApplicationController
         payload, sig_header, endpoint_secret
       )
     rescue JSON::ParserError => e
-      puts e.message
-      render json: { message: 'ParserError' }, status: 400
+      render json: { message: 'ParserError', data: e.message }, status: 400
       return
     rescue Stripe::SignatureVerificationError => e
-      puts e.message
       render json: { message: 'SignatureVerificationError', data: e.message }, status: 400
       return
     end

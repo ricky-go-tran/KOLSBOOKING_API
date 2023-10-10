@@ -1,5 +1,5 @@
 class Emoji < ApplicationRecord
-  EMOJI_STATUS = %w[like love unlike haha anrgy].freeze
+  EMOJI_STATUS = %w[like unlike].freeze
 
   resourcify
   belongs_to :emojiable, polymorphic: true

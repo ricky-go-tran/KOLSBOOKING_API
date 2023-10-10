@@ -51,7 +51,7 @@ class Profile < ApplicationRecord
   end
 
   def check_age_enough
-    if ((Time.now.to_date - birthday) / 365).floor > MIN_AGE
+    if birthday.present? && (((Time.now.to_date - birthday.to_date) / 365).floor > MIN_AGE)
       errors.add(:birthday, I18n.t('profile.error.old_enough'))
     end
   end
