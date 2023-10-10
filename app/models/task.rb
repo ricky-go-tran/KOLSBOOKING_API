@@ -1,16 +1,20 @@
 class Task < ApplicationRecord
   TASK_STATUS = %w[planning progress complete cancle].freeze
+  TASK_CATEGORY = %w[personal web_job facebook_job tiktok_job youtube_job instgram_job other entertainment].freeze
   TASK_TITLE_LENGTH = 5..200
   TASK_DESC_LENGTH = 10..3000
+
+  enum category_enum: TASK_CATEGORY
 
   resourcify
   belongs_to :kol_profile
 
   validates :title, :start_time, :end_time, :status, presence: true
+  validates :category, inclusion: { in: TASK_CATEGORY }
   validates :status, inclusion: { in: TASK_STATUS }
   validates :title, length: { in: TASK_TITLE_LENGTH, message: I18n.t('task.error.title_length', min_size: TASK_TITLE_LENGTH.min, max_size: TASK_TITLE_LENGTH.max) }
   validates :description, length: { in: TASK_DESC_LENGTH, message: I18n.t('task.error.desc_length', min_size: TASK_DESC_LENGTH.min, max_size: TASK_DESC_LENGTH.max) }
-  validate :start_time_must_be_before_end_time
+  validate :start_time_must_be_before_end_time, on: %i[create update]
 
   private
 

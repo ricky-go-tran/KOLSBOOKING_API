@@ -20,6 +20,8 @@ class Profile < ApplicationRecord
   has_many :emojied, as: :emojiable, class_name: 'Emoji'
   has_many :reported, as: :reportable, class_name: 'Report'
 
+  before_validation :create_on_stripe, on: :create
+
   validates :fullname, :status, :birthday, presence: true
   validates :status, inclusion: { in: PROFILE_STATUS, message: I18n.t('profile.error.profile_status') }
   validates :phone, length: { is: PHONE_LENGTH, message: I18n.t('profile.error.phone_legth', phone_size: PHONE_LENGTH) }
@@ -52,5 +54,12 @@ class Profile < ApplicationRecord
     if ((Time.now.to_date - birthday) / 365).floor > MIN_AGE
       errors.add(:birthday, I18n.t('profile.error.old_enough'))
     end
+  end
+
+  def create_on_stripe
+    user = User.find_by(id: user_id)
+    params = { email: user.email, name: fullname }
+    response = Stripe::Customer.create(params)
+    self.stripe_id = response.id
   end
 end
