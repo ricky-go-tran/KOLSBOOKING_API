@@ -64,6 +64,7 @@ group :development, :test do
   gem 'shoulda-matchers'
   gem 'webmock'
   gem 'rspec-rails'
+  gem 'annotate'
 
   gem 'factory_bot_rails'
 end

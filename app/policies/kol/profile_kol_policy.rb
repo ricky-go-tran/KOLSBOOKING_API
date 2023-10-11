@@ -1,4 +1,4 @@
-class ProfileKolPolicy < ApplicationPolicy
+class Kol::ProfileKolPolicy < ApplicationPolicy
   def show?
     record.status == 'valid' && record.has_role?(:kol)
   end

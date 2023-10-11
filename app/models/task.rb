@@ -1,3 +1,18 @@
+# == Schema Information
+#
+# Table name: tasks
+#
+#  id             :bigint           not null, primary key
+#  kol_profile_id :bigint           not null
+#  title          :string           not null
+#  start_time     :datetime         not null
+#  end_time       :datetime         not null
+#  status         :string           default("planning"), not null
+#  description    :text
+#  created_at     :datetime         not null
+#  updated_at     :datetime         not null
+#  category       :string           default("personal"), not null
+#
 class Task < ApplicationRecord
   TASK_STATUS = %w[planning progress complete cancle].freeze
   TASK_CATEGORY = %w[personal web_job facebook_job tiktok_job youtube_job instgram_job other entertainment].freeze

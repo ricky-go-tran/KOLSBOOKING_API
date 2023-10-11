@@ -1,6 +1,6 @@
 require_relative './module/statistical_module'
 class StatisticalKolByTimeService < ApplicationService
-  include StatisticalModule
+  include Module::StatisticalModule
 
   attr_reader :time, :kol_current_id
 

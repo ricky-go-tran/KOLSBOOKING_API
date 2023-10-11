@@ -126,13 +126,19 @@ Rails.application.routes.draw do
   end
   get 'current_user/index'
 
+  resources :google_auths, only: [] do
+    collection do
+      get 'callback'
+      post "callback"
+    end
+  end
+
   devise_for :users, path: '', path_names: {
     sign_in: 'login',
     sign_out: 'logout',
     registration: 'signup'
   },
   controllers: {
-    omniauth_callbacks: 'users/omniauth_callbacks',
     sessions: 'users/sessions',
     registrations: 'users/registrations'
   }

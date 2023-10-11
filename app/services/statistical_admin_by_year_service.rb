@@ -1,6 +1,6 @@
 require_relative './module/statistical_module'
 class StatisticalAdminByYearService < ApplicationService
-  include StatisticalModule
+  include Module::StatisticalModule
   def initialize; end
 
   def call
