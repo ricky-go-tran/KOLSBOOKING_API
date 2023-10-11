@@ -1,5 +1,5 @@
 class UserSerializer < BaseSerializer
-  attributes :id, :email, :profile
+  attributes :id, :email, :profile, :status
 
   attribute :profile do |user|
     ProfileSerializer.new(user.profile)

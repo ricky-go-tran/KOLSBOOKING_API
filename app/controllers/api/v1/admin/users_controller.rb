@@ -26,10 +26,10 @@ class Api::V1::Admin::UsersController < Api::V1::Admin::BaseController
   end
 
   def unlock
-    if @user.profile.status == 'valid'
+    if @user.status == 'valid'
       render json: { errors: [I18n.t('user.error_already_valid')] }, status: 422
-    elsif @user.profile.update(status: 'valid')
-      SendMailUnlockUserWorker.perform_sync(@user.id)
+    elsif @user.update(status: 'valid')
+      SendMailUnlockUserWorker.perform_in(30.seconds, @user.id)
       render json: UserSerializer.new(@user), status: 200
     else
       render json: { errors: @user.errors.full_messages }, status: 422
@@ -37,9 +37,9 @@ class Api::V1::Admin::UsersController < Api::V1::Admin::BaseController
   end
 
   def lock
-    if @user.profile.status == 'lock'
+    if @user.status == 'lock'
       render json: { errors: [I18n.t('user.error_already_lock')] }, status: 422
-    elsif @user.profile.update(status: 'lock')
+    elsif @user.update(status: 'lock')
       SendMailLockUserWorker.perform_in(30.seconds, @user.id)
       render json: UserSerializer.new(@user), status: 200
     else

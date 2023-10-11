@@ -1,5 +1,5 @@
 class ProfileSerializer < BaseSerializer
-  attributes :id, :fullname, :phone, :address, :status, :birthday
+  attributes :id, :fullname, :phone, :address, :birthday
 
   attribute :avatar do |profile|
     if profile.avatar.attached?
