@@ -1,3 +1,3 @@
 class TaskSerializer < BaseSerializer
-  attributes :id, :title, :start_time, :end_time, :status, :description
+  attributes :id, :title, :start_time, :end_time, :status, :description, :category
 end

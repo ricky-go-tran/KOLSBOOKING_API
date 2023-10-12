@@ -36,7 +36,7 @@ Rails.application.routes.draw do
 
       namespace :kol do
         resources :statistical, only: %i[index]
-        resources :tasks, only: %i[ index create  update destroy ]
+        resources :tasks, only: %i[ index create show  update destroy ]
         resources :kol_profiles, only: %i[index create edit] do
           collection do
             put 'edit_kol_profile'
@@ -61,6 +61,7 @@ Rails.application.routes.draw do
       end
 
       namespace :base do
+
         resources :jobs, only: %i[index create update show edit] do
           member do
             delete "cancle"
@@ -69,6 +70,17 @@ Rails.application.routes.draw do
             post "booking"
           end
         end
+
+        resources :payment_intents, only: %i[create] do
+          collection do
+            put "update_job"
+          end
+          member do
+            get "retrieve"
+          end
+        end
+
+        resources :invoices, only: %i[index show]
 
         resources :followers, only: %i[index] do
           member do
@@ -79,6 +91,7 @@ Rails.application.routes.draw do
           end
         end
       end
+      resource :webhooks, only: %i[create]
 
       resources :notifications, only: %i[index create] do
         member do

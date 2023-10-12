@@ -1,13 +1,18 @@
 class Api::V1::Kol::TasksController < Api::V1::Kol::BaseController
-  before_action :prepare_task, only: %i[update destroy]
+  before_action :prepare_task, only: %i[show update destroy]
 
   def index
     @tasks = policy_scope([:kol, Task])
     render json: TaskSerializer.new(@tasks), status: 200
   end
 
+  def show
+    render json: TaskSerializer.new(@task), status: 200
+  end
+
   def create
     @task = Task.new(task_params)
+    @task.kol_profile_id = current_user.profile.kol_profile.id
     if @task.save
       render json: TaskSerializer.new(@task), status: 201
     else
@@ -36,7 +41,7 @@ class Api::V1::Kol::TasksController < Api::V1::Kol::BaseController
   private
 
   def task_params
-    params.require(:task).permit(:title, :start_time, :end_time, :status, :description, :kol_profile_id)
+    params.require(:task).permit(:title, :start_time, :end_time, :description, :category, :status)
   end
 
   def prepare_task

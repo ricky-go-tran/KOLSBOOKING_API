@@ -44,24 +44,30 @@ class Job < ApplicationRecord
       .order('month')
   }
 
-  scope :total_current_month, ->(kol_id) {
-    where(created_at: Time.zone.now.beginning_of_month..Time.zone.now.end_of_month, kol_id:)
-  }
-
-  scope :status_current_month, ->(params) {
-    where(status: params[:status], created_at: Time.zone.now.beginning_of_month..Time.zone.now.end_of_month, kol_id: params[:kol_id])
-  }
-
-  scope :status_current_month_details, ->(params) {
-    where(status: params[:status], created_at: Time.zone.now.beginning_of_month..Time.zone.now.end_of_month, kol_id: params[:kol_id])
+  scope :status_current_month_details, ->(status, kol_id) {
+    where_by_status(status).where(created_at: Time.current.beginning_of_month..Time.current.end_of_month, kol_id:)
       .group('DATE(created_at)')
       .order('DATE(created_at)')
       .count
   }
 
+  scope :status_half_years_details, ->(status, kol_id) {
+    select("DATE_TRUNC('month', created_at) AS month, COUNT(*) AS count")
+      .where_by_status(status).where(created_at: 6.months.ago.beginning_of_month..Date.current.end_of_month, kol_id:)
+      .group("DATE_TRUNC('month', created_at)")
+      .order('month')
+  }
+
+  scope :status_years_details, ->(status, kol_id) {
+    select("DATE_TRUNC('month', created_at) AS month, COUNT(*) AS count")
+      .where_by_status(status).where(created_at: Date.current.beginning_of_year..Date.current.end_of_year, kol_id:)
+      .group("DATE_TRUNC('month', created_at)")
+      .order('month')
+  }
+
   scope :job_by_industry, ->(industries) {
     joins("INNER JOIN industry_associations ON insdustry_associationable_id = jobs.id AND insdustry_associationable_type = 'Job'")
-      .where('industry_associations.industry_id IN (?)', "#{industries.join(', ')}")
+      .where('industry_associations.industry_id IN (?)', industries.join(', ').to_s)
   }
 
   scope :where_get_by_status, ->(status) {
@@ -73,4 +79,12 @@ class Job < ApplicationRecord
       where(status:)
     end
   }
+
+  def self.where_by_status(status)
+    if status.present?
+      where(status:)
+    else
+      all
+    end
+  end
 end
