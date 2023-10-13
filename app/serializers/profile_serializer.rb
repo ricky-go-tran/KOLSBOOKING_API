@@ -27,6 +27,14 @@ class ProfileSerializer < BaseSerializer
     end
   end
 
+  attributes :status do |profile|
+    profile.user.status
+  end
+
+  attribute :google_integrate do |profile|
+    profile&.google_integrate&.gmail
+  end
+
   attribute :role do |profile|
     user = profile.user
     if user.has_role?(:admin)

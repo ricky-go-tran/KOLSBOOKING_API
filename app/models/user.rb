@@ -97,15 +97,4 @@ class User < ApplicationRecord
   def delete_roles
     roles.delete(roles.where(id: roles.ids))
   end
-
-  def self.from_omniauth_google(auth)
-
-    where( uid: auth['sub']).first_or_create do |user|
-      user.provider = "google_oauth2"
-      user.email = auth['email']
-      user.password = Devise.friendly_token[0, 20]
-      user.password_confirmation = user.password
-      #Profile.create!(fullname: auth.['name'], birthday: (Time.zone.now - 20.years), address: "Testing  efjeinf iejdiefn fiejfijei fiefjie fiefjie fe", phone: '12345667890')
-    end
-  end
 end

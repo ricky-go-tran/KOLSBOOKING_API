@@ -27,6 +27,7 @@ class Profile < ApplicationRecord
 
   belongs_to :user
   has_one :kol_profile
+  has_one :google_integrate
   has_one_attached :avatar
   has_many :emojis, foreign_key: 'profile_id', class_name: 'Emoji'
   has_many :reports, foreign_key: 'profile_id', class_name: 'Report'
@@ -39,9 +40,9 @@ class Profile < ApplicationRecord
   has_many :reported, as: :reportable, class_name: 'Report'
 
   before_validation :create_on_stripe, on: :create
+  accepts_nested_attributes_for :kol_profile
 
-  validates :fullname, :status, :birthday, presence: true
-  validates :status, inclusion: { in: PROFILE_STATUS, message: I18n.t('profile.error.profile_status') }
+  validates :fullname, :birthday, presence: true
   validates :phone, length: { is: PHONE_LENGTH, message: I18n.t('profile.error.phone_legth', phone_size: PHONE_LENGTH) }
   validates :fullname, length: {
     in: PROFILE_FULLNAME_LENGTH,

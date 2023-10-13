@@ -47,6 +47,8 @@ class Api::V1::Kol::JobsController < Api::V1::Kol::BaseController
   def payment
     if @job.status == 'complete'
       if @job.update(status: 'payment')
+        notification = notification_generate(@job)
+        notification.save
         render json: JobSerializer.new(@job), status: 200
       else
         render json: { errors: @job.errors.full_messages }, status: 422
@@ -84,5 +86,9 @@ class Api::V1::Kol::JobsController < Api::V1::Kol::BaseController
 
   def prepare_job
     @job = Job.find_by(id: params[:id])
+  end
+
+  def notification_generate(job)
+    @notification = Notification.new(title: 'You have a invoice', description: 'Kol is completed your job. And you can payment now', type_notice: 'notification', sender_id: job.kol_id, receiver_id: job.profile_id)
   end
 end
