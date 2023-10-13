@@ -1,3 +1,21 @@
+# == Schema Information
+#
+# Table name: profiles
+#
+#  id         :bigint           not null, primary key
+#  user_id    :bigint           not null
+#  fullname   :string           not null
+#  birthday   :date
+#  phone      :string
+#  address    :text
+#  status     :string           default("valid")
+#  created_at :datetime         not null
+#  updated_at :datetime         not null
+#  avatar_url :string
+#  uid        :string
+#  provider   :string
+#  stripe_id  :string           default("none"), not null
+#
 class Profile < ApplicationRecord
   MIN_AGE = 16.years
   IMAGE_MAX_SIZE = 10.megabytes
@@ -9,6 +27,7 @@ class Profile < ApplicationRecord
 
   belongs_to :user
   has_one :kol_profile
+  has_one :google_integrate
   has_one_attached :avatar
   has_many :emojis, foreign_key: 'profile_id', class_name: 'Emoji'
   has_many :reports, foreign_key: 'profile_id', class_name: 'Report'
@@ -21,9 +40,9 @@ class Profile < ApplicationRecord
   has_many :reported, as: :reportable, class_name: 'Report'
 
   before_validation :create_on_stripe, on: :create
+  accepts_nested_attributes_for :kol_profile
 
-  validates :fullname, :status, :birthday, presence: true
-  validates :status, inclusion: { in: PROFILE_STATUS, message: I18n.t('profile.error.profile_status') }
+  validates :fullname, :birthday, presence: true
   validates :phone, length: { is: PHONE_LENGTH, message: I18n.t('profile.error.phone_legth', phone_size: PHONE_LENGTH) }
   validates :fullname, length: {
     in: PROFILE_FULLNAME_LENGTH,
@@ -51,7 +70,7 @@ class Profile < ApplicationRecord
   end
 
   def check_age_enough
-    if ((Time.now.to_date - birthday) / 365).floor > MIN_AGE
+    if birthday.present? && (((Time.now.to_date - birthday.to_date) / 365).floor > MIN_AGE)
       errors.add(:birthday, I18n.t('profile.error.old_enough'))
     end
   end

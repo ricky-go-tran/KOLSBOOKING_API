@@ -1,5 +1,23 @@
+# == Schema Information
+#
+# Table name: profiles
+#
+#  id         :bigint           not null, primary key
+#  user_id    :bigint           not null
+#  fullname   :string           not null
+#  birthday   :date
+#  phone      :string
+#  address    :text
+#  status     :string           default("valid")
+#  created_at :datetime         not null
+#  updated_at :datetime         not null
+#  avatar_url :string
+#  uid        :string
+#  provider   :string
+#  stripe_id  :string           default("none"), not null
+#
 class ProfileSerializer < BaseSerializer
-  attributes :id, :fullname, :phone, :address, :status, :birthday
+  attributes :id, :fullname, :phone, :address, :birthday
 
   attribute :avatar do |profile|
     if profile.avatar.attached?
@@ -7,6 +25,14 @@ class ProfileSerializer < BaseSerializer
     else
       'null'
     end
+  end
+
+  attributes :status do |profile|
+    profile.user.status
+  end
+
+  attribute :google_integrate do |profile|
+    profile&.google_integrate&.gmail
   end
 
   attribute :role do |profile|

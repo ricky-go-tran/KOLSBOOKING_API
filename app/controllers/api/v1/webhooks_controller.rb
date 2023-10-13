@@ -9,11 +9,9 @@ class Api::V1::WebhooksController < ApplicationController
         payload, sig_header, endpoint_secret
       )
     rescue JSON::ParserError => e
-      puts e.message
-      render json: { message: 'ParserError' }, status: 400
+      render json: { message: 'ParserError', data: e.message }, status: 400
       return
     rescue Stripe::SignatureVerificationError => e
-      puts e.message
       render json: { message: 'SignatureVerificationError', data: e.message }, status: 400
       return
     end
@@ -22,7 +20,7 @@ class Api::V1::WebhooksController < ApplicationController
     when 'payment_intent.succeeded'
       payment_intent = event.data.object
       @job = Job.find_by(stripe_id: payment_intent.id)
-      @job.status = 'finish'
+      @job.update(status: "finish")
       @profile = @job.profile
       if @job.save
         if Notification.create(title: "#{@profile.fullname} has been payment at #{Time.current}", description: "#{@profile.fullname} has been payment to job name #{@job.title}", sender_id: @job.profile_id, receiver_id: @job.kol_id)

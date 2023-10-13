@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_10_09_095743) do
+ActiveRecord::Schema[7.0].define(version: 2023_10_12_033206) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -70,6 +70,17 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_09_095743) do
     t.datetime "updated_at", null: false
     t.index ["followed_id"], name: "index_followers_on_followed_id"
     t.index ["follower_id"], name: "index_followers_on_follower_id"
+  end
+
+  create_table "google_integrates", force: :cascade do |t|
+    t.bigint "profile_id", null: false
+    t.string "gmail"
+    t.string "refresh_token"
+    t.string "access_token"
+    t.string "code_authorization"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["profile_id"], name: "index_google_integrates_on_profile_id"
   end
 
   create_table "industries", force: :cascade do |t|
@@ -193,6 +204,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_09_095743) do
     t.string "jti", null: false
     t.string "provider"
     t.string "uid"
+    t.string "status", default: "invalid", null: false
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["jti"], name: "index_users_on_jti", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
@@ -213,6 +225,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_09_095743) do
   add_foreign_key "emojis", "profiles"
   add_foreign_key "followers", "profiles", column: "followed_id"
   add_foreign_key "followers", "profiles", column: "follower_id"
+  add_foreign_key "google_integrates", "profiles"
   add_foreign_key "industry_associations", "industries"
   add_foreign_key "jobs", "profiles"
   add_foreign_key "kol_profiles", "profiles"

@@ -35,6 +35,7 @@ Rails.application.routes.draw do
       end
 
       namespace :kol do
+        resources :google_calendar, only: %i[index create show update destroy]
         resources :statistical, only: %i[index]
         resources :tasks, only: %i[ index create show  update destroy ]
         resources :kol_profiles, only: %i[index create edit] do
@@ -112,6 +113,13 @@ Rails.application.routes.draw do
         end
       end
 
+      resource :setup_profiles, only: %i[] do
+        collection do
+          post "base"
+          post "kol"
+        end
+      end
+
       resources :industries, only: %i[index]
 
       resources :reports, only: %i[create]
@@ -126,13 +134,21 @@ Rails.application.routes.draw do
   end
   get 'current_user/index'
 
+  resources :google_auths, only: [] do
+    collection do
+      get 'callback'
+      post "callback"
+    end
+  end
+
+  resources :google_integrates, only: %i[create]
+
   devise_for :users, path: '', path_names: {
     sign_in: 'login',
     sign_out: 'logout',
     registration: 'signup'
   },
   controllers: {
-    omniauth_callbacks: 'users/omniauth_callbacks',
     sessions: 'users/sessions',
     registrations: 'users/registrations'
   }

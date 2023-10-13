@@ -1,3 +1,20 @@
+# == Schema Information
+#
+# Table name: users
+#
+#  id                     :bigint           not null, primary key
+#  email                  :string           default(""), not null
+#  encrypted_password     :string           default(""), not null
+#  reset_password_token   :string
+#  reset_password_sent_at :datetime
+#  remember_created_at    :datetime
+#  created_at             :datetime         not null
+#  updated_at             :datetime         not null
+#  jti                    :string           not null
+#  provider               :string
+#  uid                    :string
+#  status                 :string           default("invalid"), not null
+#
 class User < ApplicationRecord
   EMAILS_ADMIN = %w[tdphat.study@gmail.com admin@admin.com].freeze
 
@@ -7,7 +24,7 @@ class User < ApplicationRecord
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable,
-         :jwt_authenticatable, :omniauthable, :omniauth_providers => [:google_oauth2], jwt_revocation_strategy: self
+         :jwt_authenticatable, jwt_revocation_strategy: self
 
   has_one :profile
   has_one :kol_profile, through: :profile
@@ -79,16 +96,5 @@ class User < ApplicationRecord
 
   def delete_roles
     roles.delete(roles.where(id: roles.ids))
-  end
-
-  def self.from_omniauth_google(auth)
-
-    where( uid: auth['sub']).first_or_create do |user|
-      user.provider = "google_oauth2"
-      user.email = auth['email']
-      user.password = Devise.friendly_token[0, 20]
-      user.password_confirmation = user.password
-      #Profile.create!(fullname: auth.['name'], birthday: (Time.zone.now - 20.years), address: "Testing  efjeinf iejdiefn fiejfijei fiefjie fiefjie fe", phone: '12345667890')
-    end
   end
 end

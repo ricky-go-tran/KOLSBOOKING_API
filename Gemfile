@@ -49,11 +49,10 @@ gem 'stripe'
 gem 'sidekiq'
 gem 'active_storage_validations'
 gem 'pagy'
-gem 'omniauth'
-gem 'omniauth-google-oauth2'
-gem 'omniauth-rails_csrf_protection'
-gem 'googleauth'
 gem 'jwt'
+gem 'googleauth'
+gem 'google-api-client'
+gem 'google-apis-calendar_v3'
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
@@ -64,6 +63,7 @@ group :development, :test do
   gem 'shoulda-matchers'
   gem 'webmock'
   gem 'rspec-rails'
+  gem 'annotate'
 
   gem 'factory_bot_rails'
 end

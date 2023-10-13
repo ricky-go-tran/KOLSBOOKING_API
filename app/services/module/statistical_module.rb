@@ -1,4 +1,4 @@
-module StatisticalModule
+module Module::StatisticalModule
   def get_months_in_year(year)
     months = []
     (1..12).each do |month|
