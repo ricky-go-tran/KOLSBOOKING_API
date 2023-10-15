@@ -2,6 +2,7 @@ class Api::V1::JobsController < ApplicationController
   before_action :prepare_job, only: %i[show]
 
   def index
+    Sentry.capture_message('test message')
     search = params[:search]
     filter = params[:filter]
     jobs = policy_scope(Job)

@@ -12,7 +12,7 @@ class Api::V1::NotificationsController < ApplicationController
     if notification.save
       NotificationsChannel.broadcast_to("notifications_#{notification_param[:receiver_id]}", 'Sending..')
       render json: { message: 'Successfully marked' }, status: 201
-        .else
+    else
       render json: { errors: notification.errors.full_messages }, status: 422
     end
   end
