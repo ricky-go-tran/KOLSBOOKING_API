@@ -35,9 +35,17 @@ Rails.application.routes.draw do
       end
 
       namespace :kol do
-        resources :google_calendar, only: %i[index create show update destroy]
+        resources :google_calendar, only: %i[index create show update destroy] do
+          collection do
+            get 'check_integrate'
+          end
+        end
         resources :statistical, only: %i[index]
-        resources :tasks, only: %i[ index create show  update destroy ]
+        resources :tasks, only: %i[ index create show  update destroy ] do
+          member do
+            put 'add_google_event_id'
+          end
+        end
         resources :kol_profiles, only: %i[index create edit] do
           collection do
             put 'edit_kol_profile'

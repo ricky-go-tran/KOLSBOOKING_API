@@ -6,7 +6,6 @@ class Api::V1::SetupProfilesController < ApplicationController
     base_profile = Profile.new(base_params)
     base_profile.user_id = current_user.id
     if base_profile.save
-      current_user.status = 'valid'
       render json: ProfileSerializer.new(base_profile), status: 200
     else
       render json: { errors: base_profile.errors.full_messages }, status: 422
@@ -19,7 +18,6 @@ class Api::V1::SetupProfilesController < ApplicationController
     if kol_profile.save
       current_user.delete_roles
       current_user.add_role :kol
-      current_user.status = 'valid'
       render json: ProfileSerializer.new(kol_profile), status: 200
     else
       render json: { errors: kol_profile.errors.full_messages }, status: 422
@@ -33,6 +31,6 @@ class Api::V1::SetupProfilesController < ApplicationController
   end
 
   def kol_params
-    params.require(:kol).permit(:fullname, :birthday, :phone, :address, kol_profile_attributes: [:tiktok_path, :youtube_path, :facebook_path, :instagram_path, :about_me])
+    params.require(:kol).permit(:fullname, :birthday, :phone, :address, :avatar, kol_profile_attributes: [:tiktok_path, :youtube_path, :facebook_path, :instagram_path, :about_me])
   end
 end

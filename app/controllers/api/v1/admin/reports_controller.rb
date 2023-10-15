@@ -4,7 +4,7 @@ class Api::V1::Admin::ReportsController < ApplicationController
   def index
     search = params[:search]
     tab = params[:tab]
-    reports = Report.all.includes(:profile).order(created_at: :desc)
+    reports = Report.all.includes(profile: [:user, { avatar_attachment: :blob }, :google_integrate]).order(created_at: :desc)
     if search.present?
       reports = reports.where('title LIKE ?', "%#{search}%")
     end

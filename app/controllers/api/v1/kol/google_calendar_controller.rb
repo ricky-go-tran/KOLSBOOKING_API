@@ -4,6 +4,15 @@ require 'signet/oauth_2/client'
 class Api::V1::Kol::GoogleCalendarController < ApplicationController
   around_action :calendar_authorization, only: %i[index create show update destroy]
 
+  def check_integrate
+    @integrate = current_user.profile.google_integrate
+    if @integrate.nil? || @integrate&.code_authorization.nil?
+      render json: { message: 'Not Integrate' }, status: 400
+    else
+      render json: { message: 'Interage' }, status: 200
+    end
+  end
+
   def index
     today = DateTime.now
     first_day_of_month = today.beginning_of_month
@@ -68,6 +77,7 @@ class Api::V1::Kol::GoogleCalendarController < ApplicationController
           retry
         rescue StandardError
           @integrate.update(access_token: nil, refresh_token: nil, code: nil)
+          render status: 401
         end
       end
     end

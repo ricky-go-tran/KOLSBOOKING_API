@@ -25,7 +25,7 @@ class Kol::JobPolicy < ApplicationPolicy
 
   class Scope < Scope
     def resolve
-      scope.where(kol_id: user.profile.id)
+      scope.includes([image_attachment: :blob, profile: [:google_integrate, :user, { avatar_attachment: :blob }]]).where(kol_id: user.profile.id)
     end
   end
 end

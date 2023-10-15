@@ -3,9 +3,9 @@ class Api::V1::KolsController < ApplicationController
 
   def index
     kols = if params[:search].blank?
-             User.with_role(:kol).joins(:profile).where("profiles.status = 'valid'")
+             User.with_role(:kol).includes(profile: [:followed, :follower, { avatar_attachment: :blob }]).joins(:profile).where("profiles.status = 'valid'")
            else
-             User.with_role(:kol).joins(:profile).where("profiles.status = 'valid' and profiles.fullname LIKE '%#{params[:search]}%' ")
+             User.with_role(:kol).includes(profile: [:followed, :follower, { avatar_attachment: :blob }, :followed]).joins(:profile).where("profiles.status = 'valid' and profiles.fullname LIKE '%#{params[:search]}%' ")
            end
     pagy, kols = pagy(kols, page: page_number, items: page_size)
     render json: KolByUserSerializer.new(kols, { meta: pagy_metadata(pagy) }), status: 200

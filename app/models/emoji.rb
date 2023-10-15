@@ -1,5 +1,5 @@
 # == Schema Information
-#
+#=
 # Table name: emojis
 #
 #  id             :bigint           not null, primary key

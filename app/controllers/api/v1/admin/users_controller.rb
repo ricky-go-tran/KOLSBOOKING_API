@@ -3,9 +3,9 @@ class Api::V1::Admin::UsersController < Api::V1::Admin::BaseController
 
   def index
     users = if params[:tab].blank? || params[:tab] == 'all'
-              User.all.includes(:profile).order(created_at: :desc)
+              User.all.includes(:roles, profile: [{ avatar_attachment: :blob }, :google_integrate]).order(created_at: :desc)
             else
-              User.joins(:profile).where("profiles.status = '#{params[:tab]}'").order(created_at: :desc)
+              User.includes(:roles, profile: { avatar_attachment: :blob }).where("profiles.status = '#{params[:tab]}'").order(created_at: :desc)
             end
     pagy, users = pagy(users, page: page_number, items: page_size)
     render json: UserSerializer.new(users, { meta: pagy_metadata(pagy) }), status: 200

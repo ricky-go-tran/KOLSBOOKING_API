@@ -25,9 +25,8 @@ class ApplicationController < ActionController::API
   def check_authentication
     if current_user.blank?
       render json: {
-        status: 401,
-        message: I18n.t('user.not_login')
-      }, status: :unauthorized
+        errors: [I18n.t('user.not_login')]
+      }, status: 401
     end
   end
 
@@ -46,8 +45,7 @@ class ApplicationController < ActionController::API
 
   def user_not_authorized
     render json: {
-      status: 403,
-      message: I18n.t('user.not_authorized')
+      errors: I18n.t('user.not_authorized')
     }, status: :forbidden
   end
 

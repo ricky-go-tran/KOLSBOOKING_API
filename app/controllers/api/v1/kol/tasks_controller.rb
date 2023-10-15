@@ -1,5 +1,5 @@
 class Api::V1::Kol::TasksController < Api::V1::Kol::BaseController
-  before_action :prepare_task, only: %i[show update destroy]
+  before_action :prepare_task, only: %i[show update destroy add_google_event_id ]
 
   def index
     @tasks = policy_scope([:kol, Task])
@@ -33,6 +33,14 @@ class Api::V1::Kol::TasksController < Api::V1::Kol::BaseController
     authorize @task, policy_class: Kol::TaskPolicy
     if @task.destroy
       render json: { message: I18n.t('task.success.deleted') }, status: 200
+    else
+      render json: { errors: @task.errors.full_messages }, status: 422
+    end
+  end
+
+  def add_google_event_id
+    if @task.update(google_event_id: params[:google_event_id])
+      render json: { message: 'Successfully added event id' }, status: 200
     else
       render json: { errors: @task.errors.full_messages }, status: 422
     end

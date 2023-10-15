@@ -9,7 +9,7 @@ class Kol::BookmarkPolicy < ApplicationPolicy
 
   class Scope < Scope
     def resolve
-      scope.where(kol_profile_id: user.profile.kol_profile)
+      scope.includes(job: [{image_attachment: :blob}, profile: [:google_integrate, :user, { avatar_attachment: :blob }]]).where(kol_profile_id: user.profile.kol_profile)
     end
   end
 end

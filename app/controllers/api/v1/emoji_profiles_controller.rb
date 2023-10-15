@@ -1,7 +1,7 @@
 class Api::V1::EmojiProfilesController < ApplicationController
   before_action :check_authentication
   def index
-    emojis = Emoji.where(profile_id: current_user.profile.id, emojiable_type: 'Profile').order(created_at: :desc)
+    emojis = Emoji.includes([:profile, :emojiable]).where(profile_id: current_user.profile.id, emojiable_type: 'Profile').order(created_at: :desc)
     pagy, emojis = pagy(emojis, page: page_number, items: page_size)
     render json: EmojiWithObjectSerializer.new(emojis, { meta: pagy_metadata(pagy) }), status: 200
   end

@@ -4,7 +4,7 @@ class Api::V1::Admin::JobsController < Api::V1::Admin::BaseController
   def index
     search = params[:search]
     tab = params[:tab]
-    jobs = Job.all.includes(:profile).order(created_at: :desc)
+    jobs = Job.all.includes(:profile).includes(image_attachment: :blob).order(created_at: :desc)
     if search.present?
       jobs = jobs.where('title LIKE ?', "%#{search}%")
     end

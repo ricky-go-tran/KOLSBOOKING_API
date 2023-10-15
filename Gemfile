@@ -64,7 +64,7 @@ group :development, :test do
   gem 'webmock'
   gem 'rspec-rails'
   gem 'annotate'
-
+  gem 'bullet'
   gem 'factory_bot_rails'
 end
 

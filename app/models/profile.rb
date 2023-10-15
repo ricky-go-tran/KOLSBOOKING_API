@@ -61,7 +61,16 @@ class Profile < ApplicationRecord
   validate :check_birtday_furture, on: %i[create update]
   validate :check_age_enough, on: %i[create update]
 
+
+  after_create :update_user_status
+
+
+
   private
+
+  def update_user_status
+    user.update(status: 'valid') if user.present?
+  end
 
   def check_birtday_furture
     if birthday&.future?
