@@ -56,8 +56,7 @@ The KOL Booking Website, a platform designed to facilitate the booking of Key Op
     stripe_secret_key: ((value))
     email_password: ((value))`  
 -  **Step 8:** Create database `rails db:create`
--  **Step 9:** Migrate database `rails db:migrate` but not following default. Use migrate up each file in order to avoid foreign key errors
-![BookingDoctor (1)](https://github.com/ricky-go-tran/BookingDoctor/assets/136413699/a7ac1aa1-a487-4137-ab31-5e94bf055e9f)
+-  **Step 9:** Migrate database `rails db:migrate`
  
 - **Step 10:** Run seed file
 - **Step 11:** Run `rails server`
