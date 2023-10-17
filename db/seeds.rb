@@ -1,21 +1,87 @@
-# This file should contain all the record creation needed to seed the database with its default values.
-# The data can then be loaded with the bin/rails db:seed command (or created alongside the database with db:setup).
-#
-# Examples:
-#
-#   movies = Movie.create([{ name: "Star Wars" }, { name: "Lord of the Rings" }])
-#   Character.create(name: "Luke", movie: movies.first)
-    # jobs = Job.all
+require 'factory_bot_rails'
 
-    # jobs.each do |job|
-    #   job.image.attach(io: URI.open(Faker::LoremFlickr.image(size: "1200x900")), filename: 'default.jpg')
-    # end
-  # user = User.find(5)
-  # user.profile.avatar.attach(io: URI.open(Faker::LoremFlickr.image(size: "1200x900")), filename: 'default.jpg')
-  #
+@time = 20
+industries = []
+users = []
+profiles = []
+jobs = []
+notifications = []
+kol_users = []
+kol_profiles = []
+kol_profiles_kol = []
+reports = []
 
-Industry.create(name: 'Travel and Hospitality', description: 'The travel and hospitality industry includes businesses related to travel, tourism, and accommodations, such as hotels, airlines, travel agencies, and resorts.')
-Industry.create(name: 'Health and Fitness', description: 'The health and fitness industry focuses on promoting physical well-being and includes fitness centers, gyms, wellness programs, and healthcare-related services.')
-Industry.create(name: 'Technology and Electronics', description: 'The technology and electronics industry involves the development, manufacturing, and distribution of electronic devices, software, and technological solutions.')
-Industry.create(name: 'Finance and Investment', description: 'The finance and investment industry deals with financial services, banking, investment management, and the allocation of capital for businesses and individuals.')
-Industry.create(name: 'Digital Content and Entertainment', description: 'The digital content and entertainment industry creates and distributes digital media, including movies, music, video games, streaming services, and online content.')
+
+#Industry
+
+@time.times do
+  industries.push(FactoryBot.create(:industry))
+end
+
+# Normal User
+@time.times do
+  user = FactoryBot.create(:user)
+  users.push(user)
+  profiles.push(FactoryBot.create(:profile, user: user))
+end
+
+
+# Specilize User
+user_admin = FactoryBot.create(:user)
+user_admin.delete_roles
+profile_admin = FactoryBot.create(:profile, user: user_admin)
+user_admin.add_role :admin
+
+@time.times do
+  user_kol = FactoryBot.create(:user)
+  user_kol.delete_roles
+  user_kol.add_role :kol
+  kol_users.push(user_kol)
+  profile_kol = FactoryBot.create(:profile, user: user_kol)
+  profile_kol_kol = FactoryBot.create(:kol_profile, profile: profile_kol)
+  kol_profiles.push(profile_kol)
+  kol_profiles_kol.push(profile_kol_kol)
+end
+
+# Task
+kol_profiles_kol.each do |kol_profile|
+  FactoryBot.create(:task, kol_profile: kol_profile)
+end
+
+# Jobs
+profiles.each do |profile|
+  @time.times do
+    jobs.push(FactoryBot.create(:job, profile: profile))
+  end
+end
+
+# Notification
+profiles.each do |profile|
+  @time.times do
+    FactoryBot.create(:notification, sender: profile, receiver: kol_profiles[0])
+  end
+end
+
+# Reports
+profiles.each do |profile|
+  @time.times do
+    FactoryBot.create(:report, profile: profile, reportable:  jobs[0])
+  end
+end
+
+# Emoji
+profiles.each do |profile|
+  @time.times do
+    FactoryBot.create(:emoji, profile: profile, emojiable:  jobs[0])
+  end
+end
+
+
+
+
+
+
+
+
+
+

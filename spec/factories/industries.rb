@@ -10,7 +10,7 @@
 #
 FactoryBot.define do
   factory :industry do
-    name { 'MyString' }
-    description { 'MyText' }
+    name { Faker::Lorem.sentence }
+    description { Faker::Lorem.paragraph(sentence_count: 4) }
   end
 end

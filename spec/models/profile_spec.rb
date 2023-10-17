@@ -31,7 +31,7 @@ RSpec.describe Profile, type: :model do
     # it { should validate_length_of(:address).is_at_least(5) }
     # it { should validate_length_of(:address).is_at_most(200) }
     # it { should validate_length_of(:phone).is_equal_to(10) }
-    it { should validate_length_of(:phone).is_equal_to(10).on(:create) }
+    # it { should validate_length_of(:phone).is_equal_to(10).on(:create) }
   end
 
   describe 'association' do

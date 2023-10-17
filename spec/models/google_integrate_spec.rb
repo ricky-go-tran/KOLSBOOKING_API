@@ -14,5 +14,7 @@
 require 'rails_helper'
 
 RSpec.describe GoogleIntegrate, type: :model do
-  pending "add some examples to (or delete) #{__FILE__}"
+  describe 'association' do
+    it { should belong_to(:profile) }
+  end
 end

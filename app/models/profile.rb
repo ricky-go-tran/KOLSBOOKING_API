@@ -61,10 +61,7 @@ class Profile < ApplicationRecord
   validate :check_birtday_furture, on: %i[create update]
   validate :check_age_enough, on: %i[create update]
 
-
   after_create :update_user_status
-
-
 
   private
 

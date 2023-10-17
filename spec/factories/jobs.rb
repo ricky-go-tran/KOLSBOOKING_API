@@ -16,10 +16,11 @@
 #
 FactoryBot.define do
   factory :job do
-    title { 'MyString' }
-    description { 'MyText' }
-    price { 1.5 }
-    status { 'MyString' }
-    stripe_id { 'MyString' }
+    title { Faker::Lorem.sentence }
+    description { Faker::Lorem.paragraph(sentence_count: 4) }
+    requirement { Faker::Lorem.paragraph(sentence_count: 4) }
+    price { Faker::Number.within(range: 1..5) }
+    status { 'post' }
+    stripe_id { nil }
   end
 end

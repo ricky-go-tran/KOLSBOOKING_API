@@ -15,10 +15,10 @@
 #
 FactoryBot.define do
   factory :task do
-    title { 'MyString' }
+    title { Faker::Lorem.sentence }
     start_time { '2023-09-06 14:20:41' }
-    end_time { '2023-09-06 14:20:41' }
-    status { 'MyString' }
-    description { 'MyText' }
+    end_time { '2023-09-06 14:40:41' }
+    status { 'planning' }
+    description { Faker::Lorem.paragraph(sentence_count: 4) }
   end
 end

@@ -14,9 +14,7 @@
 #
 FactoryBot.define do
   factory :report do
-    title { 'MyString' }
-    description { 'MyText' }
-    objective { nil }
-    user { nil }
+    title { Faker::Lorem.sentence }
+    description { Faker::Lorem.paragraph(sentence_count: 4) }
   end
 end

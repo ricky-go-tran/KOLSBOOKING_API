@@ -18,9 +18,9 @@
 #
 FactoryBot.define do
   factory :profile do
-    fullname { 'MyString' }
-    birthday { '2000-09-06' }
+    fullname { Faker::Lorem.characters(number: rand(4..20)) }
+    birthday { Faker::Date.birthday(min_age: 18, max_age: 65) }
     phone { '0123456789' }
-    address { 'MyText' }
+    address { Faker::Address.full_address }
   end
 end

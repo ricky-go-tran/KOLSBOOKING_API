@@ -15,7 +15,7 @@ RSpec.describe IndustryAssociation, type: :model do
   describe 'association' do
     it { should belong_to(:industry) }
     it 'is polymorphic' do
-     expect(IndustryAssociation.reflect_on_association(:insdustry_associationable).options[:polymorphic]).to be true
+      expect(IndustryAssociation.reflect_on_association(:insdustry_associationable).options[:polymorphic]).to be true
     end
     it 'has an inverse_of' do
       association = IndustryAssociation.new

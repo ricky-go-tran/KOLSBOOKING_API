@@ -16,12 +16,12 @@
 #
 FactoryBot.define do
   factory :kol_profile do
-    tiktok_path { 'MyString' }
-    youtube_path { 'MyString' }
-    facebook_path { 'MyString' }
-    instagram_path { 'MyString' }
+    tiktok_path { Faker::Lorem.sentence }
+    youtube_path { Faker::Lorem.sentence }
+    facebook_path { Faker::Lorem.sentence }
+    instagram_path { Faker::Lorem.sentence }
+    about_me { Faker::Lorem.sentence }
     stripe_public_key { 'MyString' }
     stripe_private_key { 'MyString' }
-    profile { nil }
   end
 end
