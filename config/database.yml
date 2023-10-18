@@ -83,7 +83,10 @@ test:
 # for a full overview on how database connection configuration can be specified.
 #
 production:
-  <<: *default
-  database: kolbooking_production
-  username: kolbooking
-  password: <%= ENV["KOLBOOKING_DATABASE_PASSWORD"] %>
+  adapter: postgresql
+  encoding: unicode
+  database: bookingkol
+  host: dpg-cklva5o710pc73ed1vm0-a.singapore-postgres.render.com
+  pool: 5
+  username: bookingkol_user
+  password: NfHUZtXYeqnRmLMKZXUXNngyW5fAYWty

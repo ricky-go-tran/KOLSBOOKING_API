@@ -83,4 +83,25 @@ Rails.application.configure do
 
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
+
+  config.action_cable.mount_path = '/cable'
+  config.action_cable.url = 'wss://14.225.206.62:3000/cable'
+  config.action_cable.allowed_request_origins = [ /http:\/\/localhost:*/ ]
+
+  # Highlight code that triggered database queries in logs.
+  config.active_record.verbose_query_logs = true
+  config.action_mailer.default_url_options = { host: '14.225.206.62:3000' }
+  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.perform_deliveries = true
+  config.action_mailer.raise_delivery_errors = false
+  config.action_mailer.default charset: 'utf-8'
+  config.action_mailer.smtp_settings = {
+    address: 'smtp.gmail.com',
+    domain: 'gmail.com',
+    port: 587,
+    user_name: 'developer.opendevzone@gmail.com',
+    password: Rails.application.credentials.gmail_key,
+    authentication: 'plain',
+    enable_starttls_auto: true
+  }
 end
