@@ -18,11 +18,11 @@ class KolByProfileSerializer < BaseSerializer
   end
 
   attribute :like_num do |profile|
-    profile.emojis.where(status: 'like').count
+    profile.emojied.where(status: 'like').count
   end
 
   attribute :unlike_num do |profile|
-    profile.emojis.where(status: 'unlike').count
+    profile.emojied.where(status: 'unlike').count
   end
 
   attribute :follow_num do |profile|
