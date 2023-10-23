@@ -24,7 +24,7 @@ class Job < ApplicationRecord
 
   resourcify
   belongs_to :profile
-  has_one_attached :image
+  has_one_attached :image, service: :local
   has_many :bookmarks
   has_many :emojis, as: :emojiable
   has_many :industry_associations, as: :insdustry_associationable
@@ -83,7 +83,7 @@ class Job < ApplicationRecord
 
   scope :job_by_industry, ->(industries) {
     joins("INNER JOIN industry_associations ON insdustry_associationable_id = jobs.id AND insdustry_associationable_type = 'Job'")
-      .where('industry_associations.industry_id IN (?)', industries.join(', ').to_s)
+      .where('industry_associations.industry_id IN (?)', industries)
   }
 
   scope :where_get_by_status, ->(status) {

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_10_13_081933) do
+ActiveRecord::Schema[7.0].define(version: 2023_10_22_133433) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -50,6 +50,15 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_13_081933) do
     t.datetime "updated_at", null: false
     t.index ["job_id"], name: "index_bookmarks_on_job_id"
     t.index ["kol_profile_id"], name: "index_bookmarks_on_kol_profile_id"
+  end
+
+  create_table "bussinesses", force: :cascade do |t|
+    t.string "type_profile", default: "personal", null: false
+    t.text "overview", default: "Welcome to our company profile! At XYZ Tech Solutions, we're not just about technology; we're about creating a better future. As a leading innovator in the field of Information Technology and Software, we've been driving progress and delivering exceptional technology solutions for over a decade.", null: false
+    t.bigint "profile_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["profile_id"], name: "index_bussinesses_on_profile_id"
   end
 
   create_table "emojis", force: :cascade do |t|
@@ -111,6 +120,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_13_081933) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.text "requirement", default: "Requirement content", null: false
+    t.string "benefits", default: "", null: false
+    t.string "time_work", default: "", null: false
     t.index ["profile_id"], name: "index_jobs_on_profile_id"
   end
 
@@ -170,6 +181,16 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_13_081933) do
     t.index ["reportable_type", "reportable_id"], name: "index_reports_on_reportable"
   end
 
+  create_table "reviews", force: :cascade do |t|
+    t.text "content"
+    t.bigint "reviewer_id", null: false
+    t.bigint "reviewed_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["reviewed_id"], name: "index_reviews_on_reviewed_id"
+    t.index ["reviewer_id"], name: "index_reviews_on_reviewer_id"
+  end
+
   create_table "roles", force: :cascade do |t|
     t.string "name"
     t.string "resource_type"
@@ -223,6 +244,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_13_081933) do
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "bookmarks", "jobs"
   add_foreign_key "bookmarks", "kol_profiles"
+  add_foreign_key "bussinesses", "profiles"
   add_foreign_key "emojis", "profiles"
   add_foreign_key "followers", "profiles", column: "followed_id"
   add_foreign_key "followers", "profiles", column: "follower_id"
@@ -234,5 +256,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_13_081933) do
   add_foreign_key "notifications", "profiles", column: "sender_id"
   add_foreign_key "profiles", "users"
   add_foreign_key "reports", "profiles"
+  add_foreign_key "reviews", "profiles", column: "reviewed_id"
+  add_foreign_key "reviews", "profiles", column: "reviewer_id"
   add_foreign_key "tasks", "kol_profiles"
 end

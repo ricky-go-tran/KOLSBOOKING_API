@@ -2,8 +2,8 @@ require 'sidekiq/web'
 require 'sidekiq/api'
 
 Rails.application.routes.draw do
-  mount Sidekiq::Web => "/sidekiq"
-  mount ActionCable.server, at: "/cable"
+  mount Sidekiq::Web => '/sidekiq'
+  mount ActionCable.server, at: '/cable'
   namespace :api, defaults: { format: :json } do
 
     namespace :v1 do
@@ -48,8 +48,12 @@ Rails.application.routes.draw do
         end
         resources :kol_profiles, only: %i[index create edit] do
           collection do
+            get 'gallaries'
             put 'edit_kol_profile'
             put 'change'
+            put 'change_video'
+            put 'upload_image'
+            put 'delete_image'
           end
         end
         resources :bookmarks, only: %i[index] do
@@ -73,16 +77,16 @@ Rails.application.routes.draw do
 
         resources :jobs, only: %i[index create update show edit] do
           member do
-            delete "cancle"
+            delete 'cancle'
           end
           collection do
-            post "booking"
+            post 'booking'
           end
         end
 
         resources :payment_intents, only: %i[create] do
           collection do
-            put "update_job"
+            put 'update_job'
           end
           member do
             get "retrieve"
@@ -129,7 +133,6 @@ Rails.application.routes.draw do
       end
 
       resources :industries, only: %i[index]
-
       resources :reports, only: %i[create]
       resources :kols, only: %i[index show]
       resources :jobs, only: %i[index show]

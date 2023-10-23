@@ -15,7 +15,7 @@
 #  requirement :text             default("Requirement content"), not null
 #
 class JobSerializer < BaseSerializer
-  attributes :id, :title, :description, :requirement, :price, :status, :created_at, :stripe_id
+  attributes :id, :title, :description, :requirement, :benefits, :time_work, :price, :status, :created_at, :stripe_id
 
   attribute :owner do |job|
     ProfileSerializer.new(job.profile).as_json

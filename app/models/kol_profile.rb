@@ -16,6 +16,8 @@
 #
 class KolProfile < ApplicationRecord
   belongs_to :profile
+  has_one_attached :intro_video, service: :cloudinary
+  has_many_attached :gallaries, service: :cloudinary
   has_many :bookmarks
   has_many :tasks
   has_many :industry_associations, as: :insdustry_associationable

@@ -28,12 +28,14 @@ class Profile < ApplicationRecord
   belongs_to :user
   has_one :kol_profile
   has_one :google_integrate
-  has_one_attached :avatar
+  has_one_attached :avatar, service: :local
   has_many :emojis, foreign_key: 'profile_id', class_name: 'Emoji'
   has_many :reports, foreign_key: 'profile_id', class_name: 'Report'
   has_many :jobs
   has_many :follower, class_name: 'Follower', foreign_key: 'follower_id'
   has_many :followed, class_name: 'Follower', foreign_key: 'followed_id'
+  has_many :reviewer, class_name: 'Review', foreign_key: 'reviewer_id'
+  has_many :reviewed, class_name: 'Review', foreign_key: 'reviewed_id'
   has_many :sender, class_name: 'Notification', foreign_key: 'sender_id'
   has_many :receiver, class_name: 'Notification', foreign_key: 'receiver_id'
   has_many :emojied, as: :emojiable, class_name: 'Emoji'

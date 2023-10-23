@@ -1,0 +1,2 @@
+class BussinessByProfileDetailSerializer < BussinessByProfileSerializer
+end

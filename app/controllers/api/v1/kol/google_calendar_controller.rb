@@ -76,7 +76,7 @@ class Api::V1::Kol::GoogleCalendarController < ApplicationController
           @integrate.update(access_token: new_access_token)
           retry
         rescue StandardError
-          @integrate.update(access_token: nil, refresh_token: nil, code: nil)
+          @integrate.update(access_token: nil, refresh_token: nil, code_authorization: nil)
           render status: 401
         end
       end
