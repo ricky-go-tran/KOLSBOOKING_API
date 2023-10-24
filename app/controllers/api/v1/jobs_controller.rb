@@ -2,7 +2,6 @@ class Api::V1::JobsController < ApplicationController
   before_action :prepare_job, only: %i[show]
 
   def index
-    Sentry.capture_message('test message')
     search = params[:search]
     filter = params[:filter]
     jobs = policy_scope(Job)
@@ -24,6 +23,12 @@ class Api::V1::JobsController < ApplicationController
       profile_id = current_user.profile.id
       render json: JobWithCurrentUserEmojiSerializer.new(jobs, { params: { profile_id: }, meta: pagy_metadata(pagy) }), status: 200
     end
+  end
+
+  def jobs_by_owner
+    jobs = Job.where(profile_id: params[:id], status: 'post')
+    pagy, jobs = pagy(jobs, page: page_number, items: page_size)
+    render json: JobWithoutOwnerSerializer.new(jobs, { meta: pagy_metadata(pagy) }), status: 200
   end
 
   def show

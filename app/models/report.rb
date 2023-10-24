@@ -24,16 +24,19 @@ class Report < ApplicationRecord
   validates :title, length: { in: REPORT_TITLE_LENGTH, message: I18n.t('report.error.title_length'), min_size: REPORT_TITLE_LENGTH.min, max_size: REPORT_TITLE_LENGTH.max }
   validates :description, length: { in: REPORT_DESC_LENGTH, message: I18n.t('report.error.desc_length'), min_size: REPORT_DESC_LENGTH.min, max_size: REPORT_DESC_LENGTH.max }
 
-  scope :within_current_month, -> {
-    where(created_at: Date.current.beginning_of_month..Date.current.end_of_month)
+  scope :within_current_month, ->(filter) {
+    year, month = filter
+    start_date = Date.new(year, month, 1).beginning_of_month
+    end_date = start_date.end_of_month
+    where(created_at: start_date..end_date)
       .group('DATE(created_at)')
       .order('DATE(created_at)')
       .count
   }
 
-  scope :within_current_year, -> {
+  scope :within_current_year, ->(year) {
     select("DATE_TRUNC('month', created_at) AS month, COUNT(*) AS count")
-      .where(created_at: Date.current.beginning_of_year..Date.current.end_of_year)
+      .where(created_at: Date.new(year, 1, 1)..Date.new(year, 12, 31))
       .group("DATE_TRUNC('month', created_at)")
       .order('month')
   }

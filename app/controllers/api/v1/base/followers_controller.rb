@@ -1,4 +1,4 @@
-class Api::V1::Base::FollowersController < Api::V1::Base::BaseController
+class Api::V1::Base::FollowersController < ApplicationController
   before_action :prepare_follower, only: %i[unfollow]
 
   def index

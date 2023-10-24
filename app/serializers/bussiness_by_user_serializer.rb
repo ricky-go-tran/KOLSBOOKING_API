@@ -20,4 +20,8 @@ class BussinessByUserSerializer < BaseSerializer
   attribute :review_num do |user|
     user.profile.reviewed.count
   end
+
+  attribute :bussiness do |user|
+    user.profile.bussiness
+  end
 end

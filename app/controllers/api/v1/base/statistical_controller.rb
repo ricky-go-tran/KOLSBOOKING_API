@@ -1,4 +1,4 @@
-class Api::V1::Kol::StatisticalController < Api::V1::Kol::BaseController
+class Api::V1::Base::StatisticalController < Api::V1::Base::BaseController
   def index
     tab = params[:tab]
     filter = nil
@@ -8,12 +8,11 @@ class Api::V1::Kol::StatisticalController < Api::V1::Kol::BaseController
       filter = params[:filter].split('-').map(&:to_i)
     end
     data_hash = {}
-    kol_current_id = current_user.profile.id
-    data = StatisticalKolByTimeService.call(tab, kol_current_id, filter)
+    profile_id = current_user.profile.id
+    data = StatisticalBaseByTimeService.call(tab, profile_id, filter)
     data_hash[:total_job] = generate_date(data[:days])
     data_hash[:cancle_job] = generate_date(data[:days])
     data_hash[:finish_job] = generate_date(data[:days])
-
     data_hash = FetchStatisticalKolService.call(data, data_hash, tab)
     render json: {
       label: data_hash[:total_job].keys,

@@ -27,6 +27,7 @@ class Profile < ApplicationRecord
 
   belongs_to :user
   has_one :kol_profile
+  has_one :bussiness
   has_one :google_integrate
   has_one_attached :avatar, service: :local
   has_many :emojis, foreign_key: 'profile_id', class_name: 'Emoji'

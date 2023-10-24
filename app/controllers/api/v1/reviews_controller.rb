@@ -5,6 +5,12 @@ class Api::V1::ReviewsController < ApplicationController
     render json: ReviewWithReviewerProfileSerializer.new(reviews, { meta: pagy_metadata(pagy) }), status: 200
   end
 
+  def reviews_by_reviewed
+    reviews = Review.where(reviewed: params[:id]).order(created_at: :desc)
+    pagy, reviews = pagy(reviews, page: page_number, items: page_size)
+    render json: ReviewWithReviewerProfileSerializer.new(reviews, { meta: pagy_metadata(pagy) }), status: 200
+  end
+
   def create
     review = Review.new(review_params)
     if review.save

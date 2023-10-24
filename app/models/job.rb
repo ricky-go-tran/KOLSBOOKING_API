@@ -39,16 +39,19 @@ class Job < ApplicationRecord
   validates :image, size: { less_than: IMAGE_MAX_SIZE, message: I18n.t('genaral.error.image_size', max_size: IMAGE_MAX_SIZE) },
                     content_type: { in: IMAGE_TYPE_SUPPORT, message: I18n.t('genaral.error.image_type') }
 
-  scope :within_current_month_details, -> {
-    where(created_at: Date.current.beginning_of_month..Date.current.end_of_month)
+  scope :within_current_month_details, ->(filter) {
+    year, month = filter
+    start_date = Date.new(year, month, 1).beginning_of_month
+    end_date = start_date.end_of_month
+    where(created_at: start_date..end_date)
       .group('DATE(created_at)')
       .order('DATE(created_at)')
       .count
   }
 
-  scope :within_current_year_details, -> {
+  scope :within_current_year_details, ->(year) {
     select("DATE_TRUNC('month', created_at) AS month, COUNT(*) AS count")
-      .where(created_at: Date.current.beginning_of_year..Date.current.end_of_year)
+      .where(created_at: Date.new(year, 1, 1)..Date.new(year, 12, 31))
       .group("DATE_TRUNC('month', created_at)")
       .order('month')
   }
@@ -60,8 +63,12 @@ class Job < ApplicationRecord
       .order('month')
   }
 
-  scope :status_current_month_details, ->(status, kol_id) {
-    where_by_status(status).where(created_at: Time.current.beginning_of_month..Time.current.end_of_month, kol_id:)
+  scope :status_current_month_details, ->(status, kol_id, filter) {
+    year, month = filter
+    start_date = Date.new(year, month, 1).beginning_of_month
+    end_date = start_date.end_of_month
+    where_by_status(status)
+      .where(created_at: start_date..end_date, kol_id:)
       .group('DATE(created_at)')
       .order('DATE(created_at)')
       .count
@@ -74,9 +81,34 @@ class Job < ApplicationRecord
       .order('month')
   }
 
-  scope :status_years_details, ->(status, kol_id) {
+  scope :status_years_details, ->(status, kol_id, year) {
     select("DATE_TRUNC('month', created_at) AS month, COUNT(*) AS count")
-      .where_by_status(status).where(created_at: Date.current.beginning_of_year..Date.current.end_of_year, kol_id:)
+      .where_by_status(status).where(created_at: Date.new(year, 1, 1)..Date.new(year, 12, 31), kol_id:)
+      .group("DATE_TRUNC('month', created_at)")
+      .order('month')
+  }
+
+  scope :status_current_month_by_base_details, ->(status, profile_id, filter) {
+    year, month = filter
+    start_date = Date.new(year, month, 1).beginning_of_month
+    end_date = start_date.end_of_month
+    where_by_status(status)
+      .where(created_at: start_date..end_date, profile_id:)
+      .group('DATE(created_at)')
+      .order('DATE(created_at)')
+      .count
+  }
+
+  scope :status_half_years_by_base_details, ->(status, profile_id) {
+    select("DATE_TRUNC('month', created_at) AS month, COUNT(*) AS count")
+      .where_by_status(status).where(created_at: 6.months.ago.beginning_of_month..Date.current.end_of_month, profile_id:)
+      .group("DATE_TRUNC('month', created_at)")
+      .order('month')
+  }
+
+  scope :status_years_by_base_details, ->(status, profile_id, year) {
+    select("DATE_TRUNC('month', created_at) AS month, COUNT(*) AS count")
+      .where_by_status(status).where(created_at: Date.new(year, 1, 1)..Date.new(year, 12, 31), profile_id:)
       .group("DATE_TRUNC('month', created_at)")
       .order('month')
   }

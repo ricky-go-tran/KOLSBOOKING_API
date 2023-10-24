@@ -14,6 +14,6 @@ class BussinessByProfileSerializer < BaseSerializer
   end
 
   attribute :bussiness do |profile|
-    BussinessSerializer.new(profile.kol_profile)
+    BussinessSerializer.new(profile.bussiness)
   end
 end

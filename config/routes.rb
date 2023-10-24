@@ -74,7 +74,12 @@ Rails.application.routes.draw do
       end
 
       namespace :base do
-
+        resources :statistical, only: %i[index]
+        resources :bussiness_profiles, only: %i[index create] do
+          collection do
+            put 'change'
+          end
+        end
         resources :jobs, only: %i[index create update show edit] do
           member do
             delete 'cancle'
@@ -133,9 +138,19 @@ Rails.application.routes.draw do
       end
 
       resources :industries, only: %i[index]
+      resources :bussiness, only: %i[index show]
       resources :reports, only: %i[create]
       resources :kols, only: %i[index show]
-      resources :jobs, only: %i[index show]
+      resources :reviews, only: %i[index create] do
+        member do
+          get 'reviews_by_reviewed'
+        end
+      end
+      resources :jobs, only: %i[index show] do
+        member do
+          get 'jobs_by_owner'
+        end
+      end
       resources :profiles, only: %i[index create] do
         collection do
           put 'change'

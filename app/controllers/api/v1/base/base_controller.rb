@@ -6,6 +6,7 @@ class Api::V1::Base::BaseController < ApplicationController
 
   def check_base
     unless current_user.has_role?(:base)
+
       render json: {
         status: 401,
         message: I18n.t('user.not_enough_authorization')
