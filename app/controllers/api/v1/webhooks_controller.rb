@@ -23,7 +23,7 @@ class Api::V1::WebhooksController < ApplicationController
       @job.update(status: 'finish')
       @profile = @job.profile
       if @job.save
-        if Notification.create(title: "#{@profile.fullname} has been payment at #{Time.current}", description: "#{@profile.fullname} has been payment to job name #{@job.title}", sender_id: @job.profile_id, receiver_id: @job.kol_id)
+        if Notification.create(title: "#{@profile.fullname} has been payment at #{Time.current.strftime('%a %b %d %Y')}", description: "#{@profile.fullname} has been payment to job name #{@job.title}", sender_id: @job.profile_id, receiver_id: @job.kol_id)
           NotificationsChannel.broadcast_to("notifications_#{@job.kol_id}", 'Sending..')
         end
       else
