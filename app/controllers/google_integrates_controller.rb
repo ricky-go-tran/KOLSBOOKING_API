@@ -8,7 +8,7 @@ class GoogleIntegratesController < ApplicationController
     auth_client = client_secrets.to_authorization
     auth_client.update!(
       scope: 'https://www.googleapis.com/auth/calendar https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email',
-      redirect_uri: 'https://kolbooking-gui.vercel.app/redirect'
+      redirect_uri: 'http://localhost:9000/redirect'
     )
     auth_client.code = google_integrate_params[:code]
     auth_client.fetch_access_token!
