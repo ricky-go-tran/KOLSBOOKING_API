@@ -48,6 +48,6 @@ class Api::V1::JobsController < ApplicationController
   private
 
   def prepare_job
-    @job = Job.find_by(id: params[:id])
+    @job = Job.find_by!(id: params[:id])
   end
 end

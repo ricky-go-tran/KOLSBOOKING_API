@@ -1,4 +1,4 @@
-class Api::V1::Base::InvoicesController < ApplicationController
+class Api::V1::Base::InvoicesController < Api::V1::Base::BaseController
   before_action :prepare_invoice, only: %i[show]
 
   def index

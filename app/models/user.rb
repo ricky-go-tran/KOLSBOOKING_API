@@ -98,6 +98,24 @@ class User < ApplicationRecord
       .order('month')
   }
 
+  scope :filter_follow, ->(filter) {
+    follower_min = filter[:follow][:min]
+    follower_max = filter[:follow][:max]
+    joins(:profile).joins("INNER JOIN followers ON profiles.id = followers.followed_id").group('users.id').having('COUNT(followers.id) BETWEEN ? AND ?', follower_min, follower_max)
+  }
+
+  scope :filter_like, ->(filter) {
+    like_min = filter[:like][:min]
+    like_max = filter[:like][:max]
+    joins(:profile).joins("INNER JOIN emojis ON emojiable_id = profiles.id AND emojiable_type = 'Profile' AND emojis.status ='like'").group('users.id').having('COUNT(emojis.id) BETWEEN ? AND ?', like_min, like_max)
+  }
+
+   scope :filter_industry, ->(filter) {
+    industries = filter[:industry]
+    joins(profile: :kol_profile).joins("INNER JOIN industry_associations ON insdustry_associationable_id = kol_profiles.id AND insdustry_associationable_type = 'KolProfile'").where('industry_associations.industry_id IN (?)', industries.as_json.values).group('users.id')
+  }
+
+
 
 
   def delete_roles

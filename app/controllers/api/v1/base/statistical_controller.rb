@@ -4,7 +4,7 @@ class Api::V1::Base::StatisticalController < Api::V1::Base::BaseController
     filter = nil
     if tab == 'year'
       filter = params[:filter].to_i
-    elsif tab === 'month'
+    elsif tab == 'month'
       filter = params[:filter].split('-').map(&:to_i)
     end
     data_hash = {}
