@@ -6,7 +6,7 @@ class Api::V1::KolsController < ApplicationController
     filter = params[:filter]
     kols = User.with_role(:kol).includes(profile: [:followed, :follower, { avatar_attachment: :blob }]).joins(:profile).where("profiles.status = 'valid'")
     if search.present?
-      kols = kols.where('profiles.fullname LIKE ?', "'#{search}'")
+      kols = kols.where('profiles.fullname LIKE ?', "%#{search}%")
     end
     if filter.present?
       unless filter_follower_empty?(filter)
