@@ -89,8 +89,8 @@ Rails.application.configure do
   config.active_record.dump_schema_after_migration = false
 
   config.action_cable.mount_path = '/cable'
-  config.action_cable.url = 'wss://14.225.206.62:3000/cable'
-  config.action_cable.allowed_request_origins = [ /http:\/\/localhost:*/ ]
+  config.action_cable.url = 'ws://14.225.206.62:3000/cable'
+  config.action_cable.allowed_request_origins = [/.*/]
 
   # Highlight code that triggered database queries in logs.
   config.active_record.verbose_query_logs = true
