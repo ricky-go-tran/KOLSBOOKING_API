@@ -4,25 +4,16 @@ class Api::V1::BussinessController < ApplicationController
   def index
     search = params[:search]
     filter = params[:filter]
-    businesses = User.with_role(:base).includes(profile: [:followed, :follower, { avatar_attachment: :blob }]).joins(:profile).where("profiles.status = 'valid'")
-    if search.present?
-      businesses = businesses.joins(:profile).where('profiles.fullname LIKE ?', "%#{search}%")
-    end
-
-    if filter.present? && filter != 'all'
-      businesses = businesses.joins(profile: :bussiness).where('bussinesses.type_profile LIKE ?', "%#{filter}%")
-    end
-
+    businesses = User.get_all_businesses_valid
+    businesses = businesses.search_bussiness_by_fullname(search) if search.present?
+    businesses = businesses.search_bussiness_by_status(filter) if filter.present? && filter != 'all'
     pagy, businesses = pagy(businesses, page: page_number, items: page_size)
     render json: BussinessByUserSerializer.new(businesses, { meta: pagy_metadata(pagy) }), status: 200
   end
 
   def show
-    if current_user.blank?
-      render json: BussinessByProfileDetailSerializer.new(@business), status: 200
-    else
-      render json: BussinessByProfileDetailWithCurrentFollowSerializer.new(@business), status: 200
-    end
+    serializer = current_user.blank? ? BussinessByProfileDetailSerializer : BussinessByProfileDetailWithCurrentFollowSerializer
+    render json: serializer.new(@business), status: 200
   end
 
   private

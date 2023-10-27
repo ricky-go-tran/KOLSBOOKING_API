@@ -2,11 +2,7 @@ class Api::V1::Admin::UsersController < Api::V1::Admin::BaseController
   before_action :prepare_user, only: %i[show lock unlock]
 
   def index
-    users = if params[:tab].blank? || params[:tab] == 'all'
-              User.all.includes(:roles, profile: [{ avatar_attachment: :blob }, :google_integrate]).order(created_at: :desc)
-            else
-              User.includes(:roles, profile: { avatar_attachment: :blob }).where("profiles.status = '#{params[:tab]}'").order(created_at: :desc)
-            end
+    users = user_filter(params[:tab])
     pagy, users = pagy(users, page: page_number, items: page_size)
     render json: UserSerializer.new(users, { meta: pagy_metadata(pagy) }), status: 200
   end
@@ -26,25 +22,11 @@ class Api::V1::Admin::UsersController < Api::V1::Admin::BaseController
   end
 
   def unlock
-    if @user.status == 'valid'
-      render json: { errors: [I18n.t('user.error_already_valid')] }, status: 422
-    elsif @user.update(status: 'valid')
-      SendMailUnlockUserWorker.perform_in(30.seconds, @user.id)
-      render json: UserSerializer.new(@user), status: 200
-    else
-      render json: { errors: @user.errors.full_messages }, status: 422
-    end
+    update_user_status('valid', 'unlock', I18n.t('user.error_already_valid'))
   end
 
   def lock
-    if @user.status == 'lock'
-      render json: { errors: [I18n.t('user.error_already_lock')] }, status: 422
-    elsif @user.update(status: 'lock')
-      SendMailLockUserWorker.perform_in(30.seconds, @user.id)
-      render json: UserSerializer.new(@user), status: 200
-    else
-      render json: { errors: @user.errors.full_messages }, status: 422
-    end
+    update_user_status('lock', 'lock', I18n.t('user.error_already_lock'))
   end
 
   private
@@ -55,5 +37,25 @@ class Api::V1::Admin::UsersController < Api::V1::Admin::BaseController
 
   def prepare_user
     @user = User.find_by(id: params[:id])
+  end
+
+  def user_filter(tab)
+    if tab.blank? || tab == 'all'
+      User.all.includes(:roles, profile: [{ avatar_attachment: :blob }, :google_integrate]).order(created_at: :desc)
+    else
+      User.includes(:roles, profile: { avatar_attachment: :blob }).where("profiles.status = '#{tab}'").order(created_at: :desc)
+    end
+  end
+
+  def update_user_status(required_status, new_status, error_message)
+    if @user.status == required_status
+      render json: { errors: [error_message] }, status: :unprocessable_entity
+    elsif @user.update(status: new_status)
+      worker = new_status == 'lock' ? SendMailLockUserWorker : SendMailUnlockUserWorker
+      worker.perform_in(30.seconds, @user.id, new_status)
+      render json: UserSerializer.new(@user), status: :ok
+    else
+      render json: { errors: @user.errors.full_messages }, status: :unprocessable_entity
+    end
   end
 end

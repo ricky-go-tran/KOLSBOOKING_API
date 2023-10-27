@@ -47,4 +47,6 @@ class Report < ApplicationRecord
       .group("DATE_TRUNC('month', created_at)")
       .order('month')
   }
+
+  scope :search_by_title, ->(search) { where('title ILIKE ?', "%#{search}%") }
 end

@@ -3,28 +3,30 @@ class Api::V1::SetupProfilesController < ApplicationController
   skip_before_action :check_first_login
 
   def base
-    base_profile = Profile.new(base_params)
-    base_profile.user_id = current_user.id
-    if base_profile.save
-      render json: ProfileSerializer.new(base_profile), status: 200
-    else
-      render json: { errors: base_profile.errors.full_messages }, status: 422
-    end
+    setup_profile(:base, base_params)
   end
 
   def kol
-    kol_profile = Profile.new(kol_params)
-    kol_profile.user_id = current_user.id
-    if kol_profile.save
-      current_user.delete_roles
-      current_user.add_role :kol
-      render json: ProfileSerializer.new(kol_profile), status: 200
-    else
-      render json: { errors: kol_profile.errors.full_messages }, status: 422
-    end
+    setup_profile(:kol, kol_params)
   end
 
   private
+
+  def setup_profile(role, params)
+    profile = Profile.new(params)
+    profile.user_id = current_user.id
+
+    if profile.save
+      if role == :kol
+        current_user.delete_roles
+        current_user.add_role :kol
+      end
+
+      render json: ProfileSerializer.new(profile), status: :ok
+    else
+      render json: { errors: profile.errors.full_messages }, status: :unprocessable_entity
+    end
+  end
 
   def base_params
     params.require(:base).permit(:fullname, :birthday, :phone, :address, :avatar)

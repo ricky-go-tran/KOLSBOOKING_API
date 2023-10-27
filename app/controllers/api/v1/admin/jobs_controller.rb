@@ -5,12 +5,8 @@ class Api::V1::Admin::JobsController < Api::V1::Admin::BaseController
     search = params[:search]
     tab = params[:tab]
     jobs = Job.all.includes(:profile).includes(image_attachment: :blob).order(created_at: :desc)
-    if search.present?
-      jobs = jobs.where('title LIKE ?', "%#{search}%")
-    end
-    if tab.present? && tab != 'all'
-      jobs = jobs.where(status: params[:tab]).order(created_at: :desc)
-    end
+    jobs = jobs.search_by_title(search) if search.present?
+    jobs = jobs.where(status: params[:tab]).order(created_at: :desc) if (tab.present? && tab != 'all')
     pagy, jobs = pagy(jobs, page: page_number, items: page_size)
     render json: JobSerializer.new(jobs, { meta: pagy_metadata(pagy) }), status: 200
   end

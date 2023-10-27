@@ -114,8 +114,13 @@ class User < ApplicationRecord
     industries = filter[:industry]
     joins(profile: :kol_profile).joins("INNER JOIN industry_associations ON insdustry_associationable_id = kol_profiles.id AND insdustry_associationable_type = 'KolProfile'").where('industry_associations.industry_id IN (?)', industries.as_json.values).group('users.id')
   }
+  scope :get_all_businesses_valid, -> {with_role(:base).includes(profile: [:followed, :follower, { avatar_attachment: :blob }]).joins(:profile).where("profiles.status = 'valid'")}
+  scope :search_bussiness_by_fullname, ->(search) { joins(:profile).where('profiles.fullname ILIKE ?', "%#{search}%")}
+  scope :search_bussiness_by_status, -> (status) { joins(profile: :bussiness).where('bussinesses.type_profile ILIKE ?', "%#{status}%")}
 
 
+  scope :get_all_kols_valid, -> { with_role(:kol).includes(profile: [:followed, :follower, { avatar_attachment: :blob }]).joins(:profile).where("profiles.status = 'valid'") }
+   scope :search_kols_by_fullname, ->(search) { where('profiles.fullname ILIKE ?', "%#{search}%")}
 
 
   def delete_roles

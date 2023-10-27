@@ -115,7 +115,7 @@ class Job < ApplicationRecord
 
   scope :job_by_industry, ->(industries) {
     joins("INNER JOIN industry_associations ON insdustry_associationable_id = jobs.id AND insdustry_associationable_type = 'Job'")
-      .where('industry_associations.industry_id IN (?)', industries)
+      .where('industry_associations.industry_id IN (?)', industries).distinct
   }
 
   scope :where_get_by_status, ->(status) {
@@ -127,6 +127,8 @@ class Job < ApplicationRecord
       where(status:)
     end
   }
+
+  scope :search_by_title, ->(search) { where('title ILIKE ?', "%#{search}%") }
 
   def self.where_by_status(status)
     if status.present?

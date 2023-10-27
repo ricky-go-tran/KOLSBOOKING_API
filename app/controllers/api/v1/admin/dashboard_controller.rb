@@ -1,21 +1,17 @@
-class Api::V1::Admin::DashboardController < ApplicationController
+class Api::V1::Admin::DashboardController < Api::V1::Admin::BaseController
+  include DashboardHelpers
+
   def index
     tab = params[:tab]
     filter = fetch_filter(tab, params[:filter])
-    data = {}
-    if tab.blank? || tab == 'month'
-      data = StatisticalAdminByMonthService.call(filter)
-    elsif tab == 'half_year'
-      data = StatisticalAdminByHalfYearService.call
-    elsif tab == 'year'
-      data = StatisticalAdminByYearService.call(filter)
-    end
-    data_hash = GenerateHashDataStatisticalAdminService.call(data)
-    data_hash = if ['half_year', 'year'].include?(tab)
-                  FetchStatisticalAdminByYearToHashService.call(data, data_hash)
-                else
-                  FetchStatisticalAdminByMonthToHashService.call(data, data_hash)
-                end
+    data = fetch_data(tab, filter)
+    data_hash = generate_data_hash(data, tab)
+    render_json_response(data_hash)
+  end
+
+  private
+
+  def render_json_response(data_hash)
     render json: {
       data: {
         label: data_hash[:total_job_hash].keys,
@@ -24,18 +20,6 @@ class Api::V1::Admin::DashboardController < ApplicationController
         total_kol: data_hash[:total_kol_hash].values,
         total_report: data_hash[:total_report_hash].values
       }
-    }, status: 200
-  end
-
-  private
-
-  def fetch_filter(tab, param)
-    filter = nil
-    if tab == 'year'
-      filter = param.to_i
-    elsif tab == 'month'
-      filter = param.split('-').map(&:to_i)
-    end
-    filter
+    }, status: :ok
   end
 end
