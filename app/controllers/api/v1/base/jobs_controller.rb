@@ -66,7 +66,6 @@ class Api::V1::Base::JobsController < Api::V1::Base::BaseController
     job = Job.new(job_params)
     job.status = status
     if check_params
-
       if job.save
         render json: JobSerializer.new(job), status: 201
       else
@@ -76,7 +75,7 @@ class Api::V1::Base::JobsController < Api::V1::Base::BaseController
   end
 
   def check_params
-    job_params.is_a?(Hash) && job.key?(:title) && job.key?(:description) && job.key?(:industry_associations_attributes)
+    job_params.key?(:title) && job_params.key?(:description) && job_params.key?(:industry_associations_attributes)
   end
 
   def job_params
