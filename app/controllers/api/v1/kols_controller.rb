@@ -17,7 +17,11 @@ class Api::V1::KolsController < ApplicationController
     check_present_record(@kol)
     authorize @kol, policy_class: KolPolicy
     serializer = select_serializer
-    render json: serializer.new(@kol, { params: { profile_id: current_user.profile.id } }), status: 200
+    if current_user.blank?
+      render json: serializer.new(@kol), status: 200
+    else
+      render json: serializer.new(@kol,  { params: { profile_id: current_user.profile.id } }), status: 200
+    end
   end
 
   private
