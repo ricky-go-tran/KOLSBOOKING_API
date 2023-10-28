@@ -86,7 +86,7 @@ production:
   adapter: postgresql
   encoding: unicode
   database: bookingkol
-  host: dpg-cklva5o710pc73ed1vm0-a.singapore-postgres.render.com
+  host: localhost
   pool: 5
-  username: bookingkol_user
-  password: NfHUZtXYeqnRmLMKZXUXNngyW5fAYWty
+  username: data
+  password: 662001
