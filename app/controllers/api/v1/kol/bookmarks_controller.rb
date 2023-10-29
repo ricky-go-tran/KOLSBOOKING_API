@@ -8,6 +8,7 @@ class Api::V1::Kol::BookmarksController < Api::V1::Kol::BaseController
   end
 
   def mark
+    authorize @bookmark, policy_class: Kol::BookmarkPolicy
     if @bookmark.blank?
       create_new_bookmark
     elsif @bookmark.status != bookmark_params[:status]
@@ -21,6 +22,7 @@ class Api::V1::Kol::BookmarksController < Api::V1::Kol::BaseController
     if @bookmark.blank?
       render json: { errors: [I18n.t('bookmark.error.no_exist')] }, status: 422
     else
+      authorize @bookmark, policy_class: Kol::BookmarkPolicy
       authorize_and_destroy_bookmark
     end
   end
@@ -48,7 +50,6 @@ class Api::V1::Kol::BookmarksController < Api::V1::Kol::BaseController
   end
 
   def update_existing_bookmark
-    authorize @bookmark, policy_class: Kol::BookmarkPolicy
     if @bookmark.update(bookmark_params)
       render json: BookmarkSerializer.new(@bookmark), status: 200
     else
@@ -57,7 +58,6 @@ class Api::V1::Kol::BookmarksController < Api::V1::Kol::BaseController
   end
 
   def authorize_and_destroy_bookmark
-    authorize @bookmark, policy_class: Kol::BookmarkPolicy
     if @bookmark.destroy
       render json: { message: I18n.t('bookmark.success.deleted') }, status: 200
     else

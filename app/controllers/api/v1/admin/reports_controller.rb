@@ -1,12 +1,14 @@
 class Api::V1::Admin::ReportsController < Api::V1::Admin::BaseController
+  include ConstantHelper
+
   before_action :prepare_report, only: %i[proccess sovled rejected show]
 
   def index
     search = params[:search]
     tab = params[:tab]
-    reports = Report.all.includes(profile: [:user, { avatar_attachment: :blob }, :google_integrate]).order(created_at: :desc)
+    reports = Report.includes(profile: [:user, { avatar_attachment: :blob }, :google_integrate]).order(created_at: :desc)
     reports = reports.search_by_title if search.present?
-    reports = reports.where(status: params[:tab]).order(created_at: :desc) if tab.present? && tab != 'all'
+    reports = reports.where(status: params[:tab]).order(created_at: :desc) if tab.present? && REPORTS_ACCEPTED_PARAMS.include?(tab)
     pagy, reports = pagy(reports, page: page_number, items: page_size)
     render json: ReportSerializer.new(reports, { meta: pagy_metadata(pagy) }), status: 200
   end

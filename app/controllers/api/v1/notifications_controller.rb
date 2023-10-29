@@ -17,6 +17,7 @@ class Api::V1::NotificationsController < ApplicationController
   end
 
   def read
+    authorize @notification, policy_class: NotificationPolicy
     if mark_notification_as_read
       render json: NotificationSerializer.new(@notification), status: :ok
     else

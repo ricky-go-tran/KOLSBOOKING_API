@@ -1,6 +1,6 @@
-class BussinessPolicy < ApplicationPolicy
-  def show?
-    record.user.status == 'valid'
+class ProfilePolicy < ApplicationPolicy
+  def change?
+    record.id == user.profile.id
   end
 
   class Scope < Scope

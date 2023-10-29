@@ -1,4 +1,5 @@
 class Api::V1::Base::JobsController < Api::V1::Base::BaseController
+  include ConstantHelper
   before_action :prepare_job, only: %i[update cancle show edit]
   before_action :handle_params, only: %i[update create booking]
 
@@ -7,7 +8,7 @@ class Api::V1::Base::JobsController < Api::V1::Base::BaseController
     tab = params[:tab]
     jobs = policy_scope([:base, Job]).order(created_at: :desc)
     jobs = jobs.search_by_title(search) if search.present?
-    jobs = jobs.where_get_by_status(tab).order(created_at: :desc) if tab.present? && tab != 'all'
+    jobs = jobs.where_get_by_status(tab).order(created_at: :desc) if tab.present? && JOBS_ACCEPTED_PARAMS.include?(tab)
     pagy, jobs = pagy(jobs, page: page_number, items: page_size)
     render json: JobSerializer.new(jobs, { meta: pagy_metadata(pagy) }), status: 200
   end

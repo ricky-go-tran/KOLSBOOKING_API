@@ -2,7 +2,7 @@ class Api::V1::Base::FollowersController < ApplicationController
   before_action :prepare_follower, only: %i[unfollow]
 
   def index
-    follows = policy_scope([:base, Follower])
+    follows = policy_scope(Follower)
     pagy, follows = pagy(follows, page: page_number, items: page_size)
     render json: FollowSerializer.new(follows, { meta: pagy }), status: 200
   end
@@ -17,6 +17,7 @@ class Api::V1::Base::FollowersController < ApplicationController
   end
 
   def unfollow
+    authorize @follower, policy_class: FollowerPolicy
     if @follower.destroy
       render json: { message: 'Unfollow successfully' }, status: 200
     else

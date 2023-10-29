@@ -42,17 +42,16 @@ class User < ApplicationRecord
   end
 
   scope :within_current_month_base, -> (filter){
-    year, month = filter
+    year = filter[0]
+    month = filter[1]
     start_date = Date.new(year, month, 1).beginning_of_month
     end_date = start_date.end_of_month
-    subquery = joins(:roles)
+    joins(:roles)
     .where(roles: { name: 'base' })
     .where(users: { created_at: start_date..end_date })
     .group('DATE(users.created_at)')
     .order('DATE(users.created_at)')
     .select("DATE(users.created_at) AS date, COUNT(*) AS count")
-
-  from(subquery, :users)
 
   }
 

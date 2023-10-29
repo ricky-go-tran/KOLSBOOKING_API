@@ -4,7 +4,7 @@ class Kol::BookmarkPolicy < ApplicationPolicy
   end
 
   def mark?
-    user.profile.kol_profile.id == record.kol_profile_id
+    user.has_role?(:kol)
   end
 
   class Scope < Scope

@@ -33,10 +33,8 @@ class Api::V1::KolsController < ApplicationController
   def select_serializer
     if current_user.blank?
       KolByProfileDetailSerializer
-    elsif current_user.has_role?(:base)
-      KolByProfileDetailWithCurrentEmojiAndFollowSerializer
     else
-      KolByProfileDetailWithCurrentUserEmojiSerializer
+      KolByProfileDetailWithCurrentEmojiAndFollowSerializer
     end
   end
 end

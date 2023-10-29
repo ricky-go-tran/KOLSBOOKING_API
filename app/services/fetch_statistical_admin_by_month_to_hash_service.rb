@@ -10,11 +10,11 @@ class FetchStatisticalAdminByMonthToHashService < ApplicationService
     @data[:total_job].each do |date, count|
       @data_hash[:total_job_hash][date.to_s] = count
     end
-    @data[:total_base_user].each do |date, count|
-      @data_hash[:total_base_user_hash][date.to_s] = count
+    @data[:total_base_user].each do |object|
+      @data_hash[:total_base_user_hash][object.date.to_date.to_s] = object.count
     end
-    @data[:total_kol].each do |date, count|
-      @data_hash[:total_kol_hash][date.to_s] = count
+    @data[:total_kol].each do |object|
+      @data_hash[:total_kol_hash][object.date.to_date.to_s] = object.count
     end
     @data[:total_report].each do |date, count|
       @data_hash[:total_report_hash][date.to_s] = count

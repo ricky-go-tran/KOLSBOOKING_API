@@ -1,6 +1,6 @@
-class BussinessPolicy < ApplicationPolicy
+class Base::InvoicePolicy < ApplicationPolicy
   def show?
-    record.user.status == 'valid'
+    record.profile_id == user.profile.id
   end
 
   class Scope < Scope

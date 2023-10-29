@@ -12,8 +12,9 @@ class Api::V1::BussinessController < ApplicationController
   end
 
   def show
+    authorize @business, policy_class: BussinessPolicy
     serializer = current_user.blank? ? BussinessByProfileDetailSerializer : BussinessByProfileDetailWithCurrentFollowSerializer
-    render json: serializer.new(@business), status: 200
+    render json: serializer.new(@business, { params: { profile_id: current_user.profile.id } }), status: 200
   end
 
   private

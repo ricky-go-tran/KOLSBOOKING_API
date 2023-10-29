@@ -1,4 +1,5 @@
 class Api::V1::Kol::JobsController < Api::V1::Kol::BaseController
+  include ConstantHelper
   before_action :prepare_job, only: %i[show apply finish payment complete cancle]
 
   def index
@@ -6,7 +7,7 @@ class Api::V1::Kol::JobsController < Api::V1::Kol::BaseController
     tab = params[:tab]
     jobs = policy_scope([:kol, Job]).order(created_at: :desc)
     jobs = jobs.search_by_title(search) if search.present?
-    jobs = jobs.where_get_by_status(tab).order(created_at: :desc) if tab.present? && tab != 'all'
+    jobs = jobs.where_get_by_status(tab).order(created_at: :desc) if tab.present? && JOBS_ACCEPTED_PARAMS.include?(tab)
     pagy, jobs = pagy(jobs, page: page_number, items: page_size)
     render json: JobSerializer.new(jobs, { meta: pagy_metadata(pagy) }), status: 200
   end
@@ -17,26 +18,31 @@ class Api::V1::Kol::JobsController < Api::V1::Kol::BaseController
   end
 
   def apply
+    authorize @job, policy_class: Kol::JobPolicy
     condition = (@job.status == 'booking' || @job.status == 'post')
     update_status(@job, condition, 'apply')
   end
 
   def complete
+    authorize @job, policy_class: Kol::JobPolicy
     condition = (@job.status == 'apply')
     update_status(@job, condition, 'complete')
   end
 
   def payment
+    authorize @job, policy_class: Kol::JobPolicy
     condition = (@job.status == 'complete')
     update_status(@job, condition, 'payment')
   end
 
   def finish
+    authorize @job, policy_class: Kol::JobPolicy
     condition = (@job.status == 'payment' || @job.status == 'complete')
     update_status(@job, condition, 'finish')
   end
 
   def cancle
+    authorize @job, policy_class: Kol::JobPolicy
     condition = (@job.status != 'cancle' && @job.status != 'finish')
     update_status(@job, condition, 'cancle')
   end

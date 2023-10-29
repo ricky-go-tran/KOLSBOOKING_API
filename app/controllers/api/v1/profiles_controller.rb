@@ -16,6 +16,7 @@ class Api::V1::ProfilesController < ApplicationController
   end
 
   def change
+    authorize @profile, policy_class: ProfilePolicy
     if @profile.update(profile_update_params)
       render json: ProfileSerializer.new(@profile), status: 200
     else

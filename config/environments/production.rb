@@ -34,7 +34,7 @@ Rails.application.configure do
   config.active_storage.service = :local
 
   config.action_cable.mount_path = '/cable'
-  config.action_cable.url = 'ws://14.225.206.62:3000/cable'
+  config.action_cable.url = 'wss://tdphatdev.xyz/cable'
   config.action_cable.allowed_request_origins = [ /.*/ ]
 
   # Mount Action Cable outside main process or domain.
