@@ -89,12 +89,12 @@ Rails.application.configure do
   config.active_record.dump_schema_after_migration = false
 
   config.action_cable.mount_path = '/cable'
-  config.action_cable.url = 'ws://14.225.206.62:3000/cable'
+  config.action_cable.url = 'ws://103.149.86.29:3000/cable'
   config.action_cable.allowed_request_origins = [/.*/]
 
   # Highlight code that triggered database queries in logs.
   config.active_record.verbose_query_logs = true
-  config.action_mailer.default_url_options = { host: '14.225.206.62:3000' }
+  config.action_mailer.default_url_options = { host: '103.149.86.29:3000' }
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.perform_deliveries = true
   config.action_mailer.raise_delivery_errors = false

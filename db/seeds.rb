@@ -1,6 +1,6 @@
 require 'factory_bot_rails'
 
-@time = 20
+@time = 10
 industries = []
 users = []
 profiles = []
@@ -10,6 +10,7 @@ kol_users = []
 kol_profiles = []
 kol_profiles_kol = []
 reports = []
+businesses =[]
 
 
 #Industry
@@ -22,7 +23,10 @@ end
 @time.times do
   user = FactoryBot.create(:user)
   users.push(user)
-  profiles.push(FactoryBot.create(:profile, user: user))
+  profile = FactoryBot.create(:profile, user: user)
+  profiles.push(profile)
+  businesses.push(FactoryBot.create(:bussiness, profile: profile))
+
 end
 
 
