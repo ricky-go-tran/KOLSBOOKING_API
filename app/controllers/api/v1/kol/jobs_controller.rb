@@ -18,8 +18,15 @@ class Api::V1::Kol::JobsController < Api::V1::Kol::BaseController
   end
 
   def apply
-    condition = (@job.status == 'booking' || @job.status == 'post')
-    update_status(@job, condition, 'apply')
+    if @job.status == 'booking' || @job.status == 'post'
+      if @job.update(status: 'apply', kol_id: current_user.profile.id)
+        render json: JobSerializer.new(@job), status: 200
+      else
+        render json: { errors: @job.errors.full_messages }, status: 422
+      end
+    else
+      render json: { errors: [I18n.t('job.error.invalid_status')] }, status: 422
+    end
   end
 
   def complete
