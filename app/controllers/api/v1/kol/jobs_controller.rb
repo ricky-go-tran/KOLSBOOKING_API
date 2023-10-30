@@ -18,7 +18,6 @@ class Api::V1::Kol::JobsController < Api::V1::Kol::BaseController
   end
 
   def apply
-    authorize @job, policy_class: Kol::JobPolicy
     condition = (@job.status == 'booking' || @job.status == 'post')
     update_status(@job, condition, 'apply')
   end
