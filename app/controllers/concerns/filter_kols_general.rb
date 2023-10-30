@@ -4,9 +4,9 @@ module FilterKolsGeneral
   private
 
   def apply_filters(data, filter)
-    data = filter_follow(data, filter) unless filter_follower_empty?(filter)
-    data = filter_like(data, filter) unless filter_like_empty?(filter)
-    data = filter_industry(data, filter) unless filter_industry_empty?(filter)
+    data = data.filter_follow(filter) unless filter_follower_empty?(filter)
+    data = data.filter_like(filter) unless filter_like_empty?(filter)
+    data = data.filter_industry(filter) unless filter_industry_empty?(filter)
     data
   end
 
