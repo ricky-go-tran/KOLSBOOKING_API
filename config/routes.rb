@@ -82,7 +82,7 @@ Rails.application.routes.draw do
         end
         resources :jobs, only: %i[index create update show edit] do
           member do
-            put 'cancle'
+            delete 'cancle'
           end
           collection do
             post 'booking'

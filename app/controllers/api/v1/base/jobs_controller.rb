@@ -46,7 +46,7 @@ class Api::V1::Base::JobsController < Api::V1::Base::BaseController
 
   def cancle
     authorize @job, policy_class: Base::JobPolicy
-    if @job.status != 'cancle' && @job.status != 'finish' && check_params
+    if @job.status != 'cancle' && @job.status != 'finish'
       if @job.update(status: 'cancle')
         render json: JobSerializer.new(@job), status: 200
       else
